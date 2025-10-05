@@ -1408,7 +1408,7 @@
       {"id": "70pFkotFHDs", "titulo": "El solitario", "autor": "Horacio Quiroga", "genero": "CUENTO", "sinopsis": "Un joyero que vive encerrado en su obsesión por la perfección encuentra en su propio aislamiento el camino hacia la tragedia."},
       {"id": "vBJsWphc8ZY", "titulo": "El Hijo", "autor": "Horacio Quiroga", "genero": "CUENTO", "sinopsis": "Un padre vive el angustioso límite entre la realidad y la ilusión mientras busca a su hijo desaparecido en la selva. Un relato de amor, locura y desesperación."},
       {"id": "1gQ_Ov2XqDM", "titulo": "Denis", "autor": "Guy de Maupassant", "genero": "CUENTO", "sinopsis": "Un retrato sombrío de la soledad y la crueldad humana, donde un hombre sencillo es víctima de la burla y la indiferencia social."},
-      {"id": "VpT_AtCtgPQ", "titulo": "Consolación a Polibio", "autor": "Lucio Anneo Séneca", "genero": "", "sinopsis": "Un texto filosófico que enseña a aceptar el dolor y la pérdida con serenidad, buscando en la razón el consuelo ante la muerte."},
+      {"id": "VpT_AtCtgPQ", "titulo": "Consolación a Polibio", "autor": "Lucio Anneo Séneca", "genero": "ENSAYO", "sinopsis": "Un texto filosófico que enseña a aceptar el dolor y la pérdida con serenidad, buscando en la razón el consuelo ante la muerte."},
       {"id": "t2jb8V2Ontk", "titulo": "La desobediencia civil", "autor": "Henry David Thoreau", "genero": "ENSAYO", "sinopsis": "Un poderoso ensayo sobre la conciencia individual frente a la injusticia del Estado, que inspira a resistir pacíficamente toda forma de opresión."},
       {"id": "O7x0PHTelD4", "titulo": "La inmortalidad del alma", "autor": "San Agustín", "genero": "ENSAYO", "sinopsis": "Una reflexión teológica sobre la eternidad del espíritu humano, en la que la fe y la razón se entrelazan para buscar la verdad divina."},
       {"id": "K0jviQowFTc", "titulo": "El año que viene siempre es azul", "autor": "Rubén Darío", "genero": "CUENTO", "sinopsis": "Un poema en prosa sobre la esperanza, el tiempo y la melancolía, donde el azul simboliza el sueño eterno del alma."},
@@ -1621,7 +1621,7 @@
       {"id": "f1Yk7Ei1AJM", "titulo": "Aventura india", "autor": "Voltaire", "genero": "CUENTO", "sinopsis": "Con su característico ingenio, Voltaire narra un encuentro entre la razón europea y la espiritualidad oriental. Una sátira filosófica sobre la tolerancia, el prejuicio y la sabiduría."},
       {"id": "_J5xxvRu7ds", "titulo": "Los niños de oro", "autor": "Los Hermanos Grimm", "genero": "CUENTO", "sinopsis": "Dos hermanos nacen con cabellos dorados y son víctimas de la envidia y la traición. La historia exalta la pureza, la unión familiar y la justicia divina que siempre triunfa."},
       {"id": "5_udvr_wvGw", "titulo": "Oda a Federico García Lorca", "autor": "Pablo Neruda", "genero": "POESÍA", "sinopsis": "Un poema elegíaco que honra al poeta asesinado y su espíritu inmortal. Neruda transforma el dolor en canto, defendiendo la belleza, la libertad y la memoria frente al horror."},
-      {"id": "ZxtsrKfyx3A", "titulo": "El Dhammapada (El camino de la rectitud)", "autor": "Buda Gautama", "genero": "", "sinopsis": "Una colección de enseñanzas budistas sobre la mente, la compasión y la iluminación. Su mensaje invita a la serenidad y al dominio del pensamiento como camino hacia la liberación."},
+      {"id": "ZxtsrKfyx3A", "titulo": "El Dhammapada (El camino de la rectitud)", "autor": "Buda Gautama", "genero": "LITERATURA SAGRADA", "sinopsis": "Una colección de enseñanzas budistas sobre la mente, la compasión y la iluminación. Su mensaje invita a la serenidad y al dominio del pensamiento como camino hacia la liberación."},
       {"id": "RpEVAzEt0Tg", "titulo": "El funeral de John Mortonson", "autor": "Ambrose Bierce", "genero": "CUENTO", "sinopsis": "Un breve relato macabro donde la muerte y la ironía se confunden. Bierce ofrece una visión fría y sardónica del destino humano y su inevitable final."},
       {"id": "v2FMuYKAgLI", "titulo": "Betún y sangre", "autor": "Rubén Darío", "genero": "CUENTO", "sinopsis": "En un ambiente de revolución y violencia, Darío combina lirismo y crítica social. El relato revela cómo la belleza y la crueldad coexisten en el alma humana."},
       {"id": "hBJGb47pCqE", "titulo": "Una carta, un hombre y algunas cosas más", "autor": "Pablo Palacio", "genero": "CUENTO", "sinopsis": "Una historia fragmentaria que mezcla humor, introspección y absurdo. Palacio juega con las convenciones narrativas para revelar la soledad y el desconcierto del individuo moderno."},
@@ -1654,6 +1654,7 @@
       {"id": "LuomJ1UsMY4", "titulo": "El dedo medio del pie derecho", "autor": "Ambrose Bierce", "genero": "CUENTO", "sinopsis": "Un soldado muerto deja un misterio absurdo y macabro detrás de su amputación. Bierce mezcla humor negro y crítica bélica en un relato tan breve como inquietante."}
       
 ]
+
 
 
 
