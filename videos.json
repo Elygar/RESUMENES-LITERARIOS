@@ -2043,7 +2043,7 @@
       {"id": "fRoAePIAHnM", "titulo": "Champagne", "autor": "Emilia Pardo Bazán", "genero": "CUENTO", "sinopsis": "Durante una celebración, las burbujas del champagne ocultan tensiones, celos y desengaños. Un retrato sutil de las apariencias sociales."},
       {"id": "d39IM2RPePE", "titulo": "Champagne", "autor": "Emilia Pardo Bazán", "genero": "CUENTO", "sinopsis": "Durante una celebración, las burbujas del champagne ocultan tensiones, celos y desengaños. Un retrato sutil de las apariencias sociales."},
       {"id": "lLnm2VFzPpk", "titulo": "Champagne", "autor": "Emilia Pardo Bazán", "genero": "CUENTO", "sinopsis": "Durante una celebración, las burbujas del champagne ocultan tensiones, celos y desengaños. Un retrato sutil de las apariencias sociales."},
-      {"id": "pMOEP5JghUU", "titulo": "Algunas consecuencias psíquicas de la diferencia sexual anatómica", "autor": "Sigmund Freud", "genero": "", "sinopsis": "Freud analiza cómo las diferencias biológicas influyen en la formación psicológica y social, proponiendo una de sus teorías más debatidas."},
+      {"id": "pMOEP5JghUU", "titulo": "Algunas consecuencias psíquicas de la diferencia sexual anatómica", "autor": "Sigmund Freud", "genero": "ENSAYO", "sinopsis": "Freud analiza cómo las diferencias biológicas influyen en la formación psicológica y social, proponiendo una de sus teorías más debatidas."},
       {"id": "ECIO19XCZhc", "titulo": "Ver con los ojos", "autor": "Miguel de Unamuno", "genero": "CUENTO", "sinopsis": "Una reflexión filosófica sobre la percepción, el conocimiento y la necesidad de ver más allá de lo visible para entender la verdad."},
       {"id": "ZRI4WqlIz8c", "titulo": "Ver con los ojos", "autor": "Miguel de Unamuno", "genero": "CUENTO", "sinopsis": "Una reflexión filosófica sobre la percepción, el conocimiento y la necesidad de ver más allá de lo visible para entender la verdad."},
       {"id": "mVkTnoMPjPA", "titulo": "Ver con los ojos", "autor": "Miguel de Unamuno", "genero": "CUENTO", "sinopsis": "Una reflexión filosófica sobre la percepción, el conocimiento y la necesidad de ver más allá de lo visible para entender la verdad."},
@@ -2309,7 +2309,7 @@
       {"id": "YDrRFh6pxy8", "titulo": "Un retrato", "autor": "Guy de Maupassant", "genero": "CUENTO", "sinopsis": "El hallazgo de un viejo retrato despierta recuerdos y pasiones olvidadas. Maupassant explora el poder evocador de la memoria."},
       {"id": "f3Y3-OxHqnU", "titulo": "El tío amable", "autor": "Guy de Maupassant", "genero": "CUENTO", "sinopsis": "Detrás de la sonrisa del “tío amable” se esconde una amarga ironía sobre la hipocresía familiar y las apariencias sociales."},
       {"id": "8CERA4S79OA", "titulo": "Cuentos de Amor", "autor": "Emilia Pardo Bazán", "genero": "COMPILACIÓN, CUENTO", "sinopsis": "Una serie de relatos donde el amor aparece en todas sus formas: puro, trágico, violento y redentor."},
-      {"id": "-_L5XMtPyUc", "titulo": "Fetichismo", "autor": "Sigmund Freud", "genero": "", "sinopsis": "Ensayo donde Freud analiza cómo ciertos objetos se convierten en símbolos del deseo, revelando la complejidad del inconsciente."},
+      {"id": "-_L5XMtPyUc", "titulo": "Fetichismo", "autor": "Sigmund Freud", "genero": "ENSAYO", "sinopsis": "Ensayo donde Freud analiza cómo ciertos objetos se convierten en símbolos del deseo, revelando la complejidad del inconsciente."},
       {"id": "vZfgGAjuSYM", "titulo": "El salto", "autor": "León Tolstói", "genero": "CUENTO", "sinopsis": "Un hombre al borde de la desesperación se enfrenta a su fe y al miedo. Tolstói plasma el conflicto entre la vida y la redención."},
       {"id": "87vRVhOwgeU", "titulo": "El Clavo", "autor": "Pedro Antonio de Alarcón y Ariza", "genero": "CUENTO", "sinopsis": "Un juez se enamora de una mujer enigmática mientras resuelve un crimen. Intriga, pasión y tragedia se entrelazan en este clásico romántico."},
       {"id": "SxP_OfJGbUY", "titulo": "Frritt-Flacc", "autor": "Julio Verne", "genero": "CUENTO", "sinopsis": "Un médico codicioso se enfrenta a fuerzas naturales y sobrenaturales que castigan su avaricia. Relato de ciencia, tormenta y justicia moral."},
@@ -2341,6 +2341,7 @@
       {"id": "hTOp2EVWGMc", "titulo": "El gnomo", "autor": "Gustavo Adolfo Bécquer", "genero": "CUENTO", "sinopsis": "Un ser mágico se enamora de una mujer humana, desafiando su destino. Bécquer mezcla fantasía y melancolía en esta leyenda."}
       
 ]
+
 
 
 
