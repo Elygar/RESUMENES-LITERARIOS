@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Audiolibros y Resúmenes Literarios</title>
+  <title>Resúmenes Literarios y Audiolibros | Biblioteca Digital</title>
+  <meta name="description" content="Explora resúmenes literarios y audiolibros organizados por género, autor y tema. Encuentra tus obras favoritas y aprende de manera rápida y entretenida.">
+  <meta name="keywords" content="resúmenes literarios, audiolibros, análisis de libros, literatura, novelas, poesía, clásicos">
+  <meta name="author" content="Biblioteca Digital">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f1fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #f4f1fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
     header { background: linear-gradient(90deg, #5e35b1, #311b92); color: white; padding: 20px; text-align: center; position: relative; }
-    .menu-btn { position: absolute; left: 20px; top: 10px; cursor: pointer; z-index: 100; width: 45px; height: 45px; }
+    header h1 { margin: 0; font-size: 2rem; }
+    .menu-btn { position: absolute; left: 20px; top: 10px; cursor: pointer; width: 45px; height: 45px; }
     .menu-btn img { width: 100%; height: 100%; object-fit: contain; }
     .search-container { text-align: center; margin: 20px; }
     .search-container input { width: 90%; max-width: 500px; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -16,29 +21,29 @@
     .card:hover { transform: translateY(-5px); }
     .card img { width: 100%; height: 180px; object-fit: cover; }
     .card-content { padding: 15px; }
-    .btn { margin-top: 10px; padding: 8px 16px; background: #5e35b1; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s ease; }
+    .btn { display: inline-block; margin-top: 10px; padding: 8px 16px; background: #5e35b1; color: white; border: none; border-radius: 25px; cursor: pointer; transition: background 0.2s ease; }
     .btn:hover { background: #311b92; }
     .sidebar { position: fixed; top: 0; left: -290px; width: 250px; height: 100%; background: #311b92; color: white; padding: 20px; transition: left 0.3s ease; z-index: 1200; overflow-y: auto; }
     .sidebar.active { left: 0; }
     .genre-tag { border: 1px solid white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; text-transform: uppercase; margin: 3px; transition: all 0.2s ease; }
     .genre-tag:hover, .genre-tag.active { background: white; color: #311b92; }
+    .no-results { text-align: center; padding: 40px; font-size: 1.2rem; color: #777; }
     footer { background: #311b92; color: white; text-align: center; padding: 15px; margin-top: auto; }
   </style>
 </head>
 <body>
   <header>
     <h1>RESÚMENES LITERARIOS</h1>
-    <div class="menu-btn" onclick="toggleMenu()">
-      <img src="favicon.png" alt="Menú">
-    </div>
+    <div class="menu-btn" onclick="toggleMenu()"><img src="favicon.png" alt="Menú"></div>
   </header>
 
   <main>
     <div class="search-container">
-      <input type="search" id="searchInput" placeholder="Buscar por título, autor o sinopsis..." autocomplete="off" onkeypress="return event.key !== 'Enter'">
+      <input type="search" id="searchInput" placeholder="Buscar por título, autor o género..." autocomplete="off" onkeypress="return event.key !== 'Enter'">
     </div>
+
     <section class="video-list" id="videoList"></section>
-    <nav id="pagination"></nav>
+    <div id="noResults" class="no-results" style="display:none;">No se encontraron resultados.</div>
   </main>
 
   <aside class="sidebar" id="sidebar">
@@ -46,74 +51,62 @@
     <div id="genreList" class="genre-tags"></div>
   </aside>
 
-  <footer><p>&copy; 2025 Audiolibros</p></footer>
+  <footer><p>&copy; 2025 Biblioteca Digital</p></footer>
 
   <script>
     let videos = [];
-    let currentPage = 1;
-    const itemsPerPage = 30;
+    let currentGenre = "all";
 
-    fetch('videos.json?t=' + new Date().getTime())
+    fetch("videos.json?t=" + new Date().getTime())
       .then(r => r.json())
       .then(data => {
         videos = data;
-        mostrarPagina(1);
+        mostrarVideos(videos);
         cargarGeneros();
       });
-
-    // Render progresivo para evitar congelamiento
-    function renderizarVideos(lista, container) {
-      return new Promise(resolve => {
-        container.innerHTML = "";
-        const total = lista.length;
-        let index = 0;
-        const chunk = 10; // cantidad de videos por lote
-
-        function renderChunk() {
-          const fragment = document.createDocumentFragment();
-          for (let i = 0; i < chunk && index < total; i++, index++) {
-            const video = lista[index];
-            const card = document.createElement('article');
-            card.className = "card";
-            card.innerHTML = `
-              <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.titulo}">
-              <div class="card-content">
-                <h3>${video.titulo}</h3>
-                <p><strong>Autor:</strong> ${video.autor}</p>
-                <p>${video.sinopsis}</p>
-                <button class="btn" onclick="openOverlay('${video.id}')">Ver más</button>
-              </div>`;
-            fragment.appendChild(card);
-          }
-          container.appendChild(fragment);
-          if (index < total) requestAnimationFrame(renderChunk);
-          else resolve();
-        }
-        requestAnimationFrame(renderChunk);
-      });
-    }
-
-    async function mostrarPagina(page) {
-      currentPage = page;
-      const start = (page - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      const paginaVideos = videos.slice(start, end);
-      const lista = document.getElementById("videoList");
-      await renderizarVideos(paginaVideos, lista);
-    }
 
     function toggleMenu() {
       document.getElementById('sidebar').classList.toggle('active');
     }
 
+    async function mostrarVideos(lista) {
+      const cont = document.getElementById("videoList");
+      const noRes = document.getElementById("noResults");
+      cont.innerHTML = "";
+      if (lista.length === 0) {
+        noRes.style.display = "block";
+        return;
+      }
+      noRes.style.display = "none";
+      const fragment = document.createDocumentFragment();
+      lista.forEach(v => {
+        const art = document.createElement("article");
+        art.className = "card";
+        art.innerHTML = `
+          <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.titulo}">
+          <div class="card-content">
+            <h3>${v.titulo}</h3>
+            <p><strong>Autor:</strong> ${v.autor}</p>
+            <p>${v.sinopsis}</p>
+            <button class="btn" onclick="openVideo('${v.id}')">Ver más</button>
+          </div>`;
+        fragment.appendChild(art);
+      });
+      cont.appendChild(fragment);
+    }
+
+    function openVideo(id) {
+      window.open(`https://www.youtube.com/watch?v=${id}`, "_blank");
+    }
+
     function cargarGeneros() {
-      const contenedor = document.getElementById("genreList");
-      contenedor.innerHTML = "";
+      const lista = document.getElementById("genreList");
+      lista.innerHTML = "";
       const tagTodos = document.createElement("div");
       tagTodos.textContent = "TODOS";
-      tagTodos.className = "genre-tag";
+      tagTodos.className = "genre-tag active";
       tagTodos.onclick = () => filterGenre("all", tagTodos);
-      contenedor.appendChild(tagTodos);
+      lista.appendChild(tagTodos);
 
       const generos = new Set();
       videos.forEach(v => v.genero.split(",").forEach(g => generos.add(g.trim().toUpperCase())));
@@ -122,38 +115,40 @@
         tag.textContent = g;
         tag.className = "genre-tag";
         tag.onclick = () => filterGenre(g.toLowerCase(), tag);
-        contenedor.appendChild(tag);
+        lista.appendChild(tag);
       });
     }
 
-    async function filterGenre(genre, el) {
-      document.querySelectorAll(".genre-tag").forEach(tag => tag.classList.remove("active"));
-      if (el) el.classList.add("active");
+    function filterGenre(genre, el) {
+      document.querySelectorAll(".genre-tag").forEach(t => t.classList.remove("active"));
+      el.classList.add("active");
+      currentGenre = genre;
 
-      const lista = document.getElementById("videoList");
       if (genre === "all") {
-        await mostrarPagina(1);
+        mostrarVideos(videos);
       } else {
         const filtrados = videos.filter(v => v.genero.toLowerCase().includes(genre));
-        await renderizarVideos(filtrados, lista);
+        mostrarVideos(filtrados);
       }
-
-      if (window.innerWidth <= 768) toggleMenu();
+      toggleMenu();
     }
 
-    document.getElementById('searchInput').addEventListener('input', async e => {
-      const filter = e.target.value.toLowerCase().trim();
-      const lista = document.getElementById("videoList");
-      if (!filter) {
-        await mostrarPagina(1);
+    document.getElementById("searchInput").addEventListener("input", e => {
+      const texto = e.target.value.toLowerCase().trim();
+      if (texto === "") {
+        if (currentGenre === "all") mostrarVideos(videos);
+        else filterGenre(currentGenre, document.querySelector(`.genre-tag.active`));
         return;
       }
+
+      // 🔍 búsqueda tipo “tag” inteligente
       const filtrados = videos.filter(v =>
-        v.titulo.toLowerCase().includes(filter) ||
-        v.autor.toLowerCase().includes(filter) ||
-        v.sinopsis.toLowerCase().includes(filter)
+        v.titulo.toLowerCase().includes(texto) ||
+        v.autor.toLowerCase().includes(texto) ||
+        v.sinopsis.toLowerCase().includes(texto) ||
+        v.genero.toLowerCase().includes(texto)
       );
-      await renderizarVideos(filtrados, lista);
+      mostrarVideos(filtrados);
     });
   </script>
 </body>
