@@ -1,157 +1,395 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Audiolibros y Resúmenes Literarios | Biblioteca Digital</title>
-  <meta name="description" content="Explora resúmenes literarios y audiolibros por género y autor. Aprende con análisis claros y en video de obras clásicas y contemporáneas.">
-  <meta name="keywords" content="audiolibros, resúmenes de libros, literatura, clásicos, novelas, cuentos, poesía, análisis literario, educación, cultura">
-  <meta name="author" content="Biblioteca Digital">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RESÚMENES LITERARIOS - Audiolibros y Resúmenes</title>
+  <meta name="description" content="Colección de resúmenes en video y audiolibros organizados por género. Reproduce, explora y descubre obras literarias." />
+  <link rel="icon" href="favicon.ico" />
+
   <style>
-    body { font-family:'Segoe UI',Tahoma,sans-serif;margin:0;background:#f4f1fa;color:#333;display:flex;flex-direction:column;min-height:100vh;}
-    header{background:linear-gradient(90deg,#5e35b1,#311b92);color:white;padding:20px;text-align:center;position:relative;}
-    header h1{margin:0;font-size:2rem;}
-    .menu-btn{position:absolute;left:20px;top:10px;cursor:pointer;width:45px;height:45px;}
-    .menu-btn img{width:100%;height:100%;object-fit:contain;}
-    .search-container{text-align:center;margin:20px;}
-    .search-container input{width:70%;max-width:400px;padding:10px;border:1px solid #ccc;border-radius:25px;font-size:16px;}
-    .search-container button{padding:10px 18px;background:#5e35b1;color:white;border:none;border-radius:25px;margin-left:10px;cursor:pointer;font-size:15px;}
-    .search-container button:hover{background:#311b92;}
-    .video-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:20px;max-width:1200px;margin:auto;}
-    .card{background:white;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden;transition:transform 0.2s ease;}
-    .card:hover{transform:translateY(-5px);}
-    .card img{width:100%;height:180px;object-fit:cover;}
-    .card-content{padding:15px;}
-    .card-content h3{margin:0 0 5px;font-size:1.2rem;color:#4527a0;}
-    .btn{display:inline-block;margin-top:10px;padding:8px 16px;background:#5e35b1;color:white;border:none;border-radius:25px;cursor:pointer;}
-    .btn:hover{background:#311b92;}
-    .pagination{text-align:center;margin:20px;}
-    .pagination button{margin:0 5px;padding:8px 14px;border:none;border-radius:20px;background:#5e35b1;color:white;cursor:pointer;}
-    .pagination button:disabled{background:#aaa;cursor:not-allowed;}
-    .no-results{text-align:center;padding:40px;font-size:1.2rem;color:#777;}
-    footer{background:#311b92;color:white;text-align:center;padding:15px;margin-top:auto;}
+    /* --- estilos (basados en tu diseño original) --- */
+    :root{--primary:#5e35b1;--dark:#311b92;}
+    body{font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;margin:0;background:#f4f1fa;color:#333;display:flex;flex-direction:column;min-height:100vh}
+    header{background:linear-gradient(90deg,var(--primary),var(--dark));color:#fff;padding:18px;text-align:center;position:relative}
+    header h1{margin:0;font-size:1.6rem}
+    .menu-btn{position:absolute;left:14px;top:10px;cursor:pointer;width:44px;height:44px}
+    .menu-btn img{width:100%;height:100%;object-fit:contain}
+    .search-container{display:flex;justify-content:center;align-items:center;gap:10px;padding:14px}
+    .search-container input{width:60%;max-width:420px;padding:10px 14px;border-radius:22px;border:1px solid #ccc;font-size:14px}
+    .search-container button{padding:10px 16px;border-radius:22px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+    .search-container button:disabled{opacity:.6;cursor:not-allowed}
+    main{flex:1}
+    .wrap{max-width:1200px;margin:0 auto;padding:10px}
+    .content{display:grid;grid-template-columns:1fr;gap:10px}
+    .video-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;padding:18px}
+    .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08);transition:transform .18s}
+    .card:hover{transform:translateY(-6px)}
+    .card img{width:100%;height:160px;object-fit:cover;display:block}
+    .card .card-content{padding:12px}
+    .card h3{margin:0;font-size:1rem;color:var(--dark)}
+    .card p{margin:6px 0;font-size:.9rem;color:#333}
+    .btn{display:inline-block;padding:8px 14px;border-radius:18px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+    .btn.secondary{background:#666}
+    .pagination{display:flex;gap:8px;justify-content:center;align-items:center;padding:12px}
+    .pagination button{padding:8px 12px;border-radius:18px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+    .pagination button:disabled{background:#bdbdbd;cursor:not-allowed}
+    .page-info{font-size:.95rem;color:#444;margin-left:8px}
+    #noResults{display:none;text-align:center;padding:40px;color:#666;font-size:1.1rem}
+    /* overlay */
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;padding:20px}
+    .overlay .box{width:100%;max-width:980px;background:#111;border-radius:12px;overflow:hidden;color:#fff}
+    .overlay iframe{width:100%;height:480px;border:0;display:block}
+    .video-info{padding:18px;background:#111;border-bottom:1px solid #222}
+    .video-info h2{margin:0 0 8px}
+    .video-info .author{color:#bbb;margin-bottom:8px}
+    .video-info .synopsis{color:#ddd;line-height:1.5}
+    .video-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .video-tag{background:var(--primary);padding:6px 10px;border-radius:14px;font-size:.85rem;cursor:pointer}
+    .related-videos{padding:16px;background:#0f0f0f}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+    .related-card{display:block;background:#222;border-radius:8px;overflow:hidden;cursor:pointer;color:#fff}
+    .related-card img{width:100%;height:90px;object-fit:cover;display:block}
+    .related-card .meta{padding:8px;font-size:.9rem;color:#ddd}
+    .sidebar{position:fixed;left:-300px;top:0;height:100%;width:260px;background:var(--dark);color:#fff;padding:18px;transition:left .25s;z-index:2100;overflow:auto}
+    .sidebar.active{left:0}
+    .genre-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .genre-tag{border:1px solid rgba(255,255,255,.2);padding:8px 10px;border-radius:12px;cursor:pointer;font-size:.85rem;text-transform:uppercase}
+    .genre-tag.active{background:#fff;color:var(--dark);border-color:#fff}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2050}
+    .sidebar-overlay.show{display:block}
+    footer{background:var(--dark);color:#fff;text-align:center;padding:12px}
+    @media(max-width:640px){ .search-container input{width:70%} .overlay iframe{height:260px} }
   </style>
 </head>
 <body>
+
   <header>
     <h1>RESÚMENES LITERARIOS</h1>
-    <div class="menu-btn" onclick="toggleMenu()"><img src="favicon.png" alt="Menú"></div>
+    <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+      <img src="favicon.png" alt="Menú">
+    </div>
   </header>
 
+  <div class="sidebar" id="sidebar" aria-hidden="true">
+    <h3 style="text-align:center;margin:0 0 6px">GÉNEROS</h3>
+    <div id="genreList" class="genre-tags" aria-label="Lista de géneros"></div>
+  </div>
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
+
   <main>
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Buscar por título, autor o sinopsis...">
-      <button onclick="buscar()">Buscar</button>
+    <div class="wrap">
+      <div class="search-container" role="search">
+        <input id="searchInput" type="text" placeholder="Buscar por título, autor o sinopsis..." aria-label="Buscar">
+        <button id="searchBtn" onclick="buscar()">Buscar</button>
+      </div>
+
+      <div id="noResults" >Página no encontrada.</div>
+
+      <section class="video-list" id="videoList" aria-live="polite" ></section>
+
+      <div class="pagination" id="paginationBar" role="navigation" aria-label="Paginación">
+        <!-- botones generados dinámicamente -->
+      </div>
     </div>
-
-    <section class="video-list" id="videoList"></section>
-    <div id="noResults" class="no-results" style="display:none;">Página no encontrada.</div>
-
-    <div class="pagination" id="pagination"></div>
   </main>
 
-  <footer><p>&copy; 2025 Biblioteca Digital - Audiolibros y Resúmenes Literarios.</p></footer>
+  <div class="overlay" id="videoOverlay" role="dialog" aria-modal="true">
+    <div class="box">
+      <button class="close-btn" style="position:absolute;right:22px;top:18px;background:crimson;color:white;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;z-index:2200" onclick="closeOverlay()">✖</button>
+      <div id="playerWrap">
+        <iframe id="playerFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="video-info" id="videoInfo"></div>
+      <div class="related-videos" id="relatedVideos"></div>
+    </div>
+  </div>
 
-  <script>
-    let videos = [];
-    let currentPage = 1;
-    const itemsPerPage = 12;
-    let listaActual = [];
+  <footer><small>&copy; 2025 Audiolibros - Resúmenes en Video de Obras Literarias</small></footer>
 
-    fetch("videos.json?t=" + new Date().getTime())
-      .then(r => r.json())
-      .then(data => {
-        videos = data;
-        listaActual = [...videos];
-        mostrarPagina(1);
-      });
+<script>
+/* -----------------------------
+   Variables y estado
+   ----------------------------- */
+let videos = [];
+let listaActual = [];       // lista filtrada/actual
+let currentPage = 1;
+const itemsPerPage = 12;
 
-    function mostrarPagina(page) {
-      const totalPages = Math.ceil(listaActual.length / itemsPerPage);
-      if (page < 1) page = 1;
-      if (page > totalPages) page = totalPages;
-      currentPage = page;
+/* --- Cargar JSON --- */
+fetch('videos.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    videos = Array.isArray(data) ? data : [];
+    listaActual = videos.slice();
+    cargarGeneros();
+    mostrarPagina(1);
+  })
+  .catch(err => {
+    console.error('Error cargando videos.json', err);
+    document.getElementById('noResults').textContent = 'Error cargando contenido.';
+    document.getElementById('noResults').style.display = 'block';
+  });
 
-      const lista = document.getElementById("videoList");
-      const noRes = document.getElementById("noResults");
-      lista.innerHTML = "";
-      noRes.style.display = "none";
 
-      if (listaActual.length === 0) {
-        noRes.style.display = "block";
-        document.getElementById("pagination").innerHTML = "";
-        return;
-      }
+/* -----------------------------
+   Renderizado de lista / paginación
+   ----------------------------- */
+function mostrarPagina(page){
+  const listEl = document.getElementById('videoList');
+  const noResEl = document.getElementById('noResults');
+  listEl.innerHTML = '';
+  noResEl.style.display = 'none';
 
-      const start = (page - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      const paginaVideos = listaActual.slice(start, end);
+  if (!Array.isArray(listaActual) || listaActual.length === 0) {
+    noResEl.style.display = 'block';
+    renderPaginacion(0);
+    return;
+  }
 
-      paginaVideos.forEach(video => {
-        const card = document.createElement("article");
-        card.className = "card";
-        card.innerHTML = `
-          <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.titulo}">
-          <div class="card-content">
-            <h3>${video.titulo}</h3>
-            <p><strong>Autor:</strong> ${video.autor}</p>
-            <p>${video.sinopsis}</p>
-            <button class="btn" onclick="openVideo('${video.id}')">Ver más</button>
-          </div>`;
-        lista.appendChild(card);
-      });
+  const totalPages = Math.max(1, Math.ceil(listaActual.length / itemsPerPage));
+  if (page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+  currentPage = page;
 
-      generarPaginacion(totalPages);
-    }
+  const start = (currentPage - 1) * itemsPerPage;
+  const slice = listaActual.slice(start, start + itemsPerPage);
 
-    function generarPaginacion(totalPages) {
-      const pag = document.getElementById("pagination");
-      pag.innerHTML = "";
+  // fragment para evitar repaints excesivos
+  const frag = document.createDocumentFragment();
+  slice.forEach(v => {
+    const art = document.createElement('article');
+    art.className = 'card';
+    art.innerHTML = `
+      <img loading="lazy" src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${escapeHtml(v.titulo)}">
+      <div class="card-content">
+        <h3>${escapeHtml(v.titulo)}</h3>
+        <p><strong>Autor:</strong> ${escapeHtml(v.autor)}</p>
+        <p title="${escapeHtml(v.sinopsis)}">${escapeHtml(truncate(v.sinopsis,120))}</p>
+        <button class="btn" onclick="openOverlay('${v.id}')">Ver más</button>
+      </div>`;
+    frag.appendChild(art);
+  });
+  listEl.appendChild(frag);
+  renderPaginacion(Math.ceil(listaActual.length / itemsPerPage));
+}
 
-      const inicio = document.createElement("button");
-      inicio.textContent = "Inicio";
-      inicio.disabled = currentPage === 1;
-      inicio.onclick = () => mostrarPagina(1);
-      pag.appendChild(inicio);
+/* Paginación: Inicio / Anterior / Siguiente y "Página X de Y" */
+function renderPaginacion(totalPages) {
+  const p = document.getElementById('paginationBar');
+  p.innerHTML = '';
+  if (totalPages === 0) return;
 
-      const anterior = document.createElement("button");
-      anterior.textContent = "Anterior";
-      anterior.disabled = currentPage === 1;
-      anterior.onclick = () => mostrarPagina(currentPage - 1);
-      pag.appendChild(anterior);
+  const btnInicio = document.createElement('button');
+  btnInicio.textContent = 'Inicio';
+  btnInicio.disabled = currentPage === 1;
+  btnInicio.onclick = () => mostrarPagina(1);
+  p.appendChild(btnInicio);
 
-      const siguiente = document.createElement("button");
-      siguiente.textContent = "Siguiente";
-      siguiente.disabled = currentPage === totalPages;
-      siguiente.onclick = () => mostrarPagina(currentPage + 1);
-      pag.appendChild(siguiente);
-    }
+  const btnPrev = document.createElement('button');
+  btnPrev.textContent = 'Anterior';
+  btnPrev.disabled = currentPage === 1;
+  btnPrev.onclick = () => mostrarPagina(currentPage - 1);
+  p.appendChild(btnPrev);
 
-    function buscar() {
-      const texto = document.getElementById("searchInput").value.toLowerCase().trim();
-      if (texto === "") {
-        listaActual = [...videos];
-        mostrarPagina(1);
-        return;
-      }
+  const info = document.createElement('span');
+  info.className = 'page-info';
+  info.textContent = `Página ${currentPage} de ${totalPages}`;
+  p.appendChild(info);
 
-      listaActual = videos.filter(v =>
-        v.titulo.toLowerCase().includes(texto) ||
-        v.autor.toLowerCase().includes(texto) ||
-        v.sinopsis.toLowerCase().includes(texto)
-      );
+  const btnNext = document.createElement('button');
+  btnNext.textContent = 'Siguiente';
+  btnNext.disabled = currentPage === totalPages;
+  btnNext.onclick = () => mostrarPagina(currentPage + 1);
+  p.appendChild(btnNext);
+}
+
+/* -----------------------------
+   Búsqueda con botón "Buscar"
+   ----------------------------- */
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') e.preventDefault(); // evitar submit/recarga por Enter
+});
+
+function buscar(){
+  const texto = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!texto){
+    listaActual = videos.slice();
+    mostrarPagina(1);
+    return;
+  }
+  // filtra por título, autor, sinopsis (coincidencia parcial)
+  listaActual = videos.filter(v => 
+    (v.titulo && v.titulo.toLowerCase().includes(texto)) ||
+    (v.autor && v.autor.toLowerCase().includes(texto)) ||
+    (v.sinopsis && v.sinopsis.toLowerCase().includes(texto)) ||
+    (v.genero && v.genero.toLowerCase().includes(texto))
+  );
+  mostrarPagina(1);
+}
+
+/* -----------------------------
+   Tags / Géneros
+   ----------------------------- */
+function cargarGeneros(){
+  const cont = document.getElementById('genreList');
+  cont.innerHTML = '';
+
+  const setG = new Set();
+  videos.forEach(v => {
+    if (!v.genero) return;
+    v.genero.split(',').forEach(g => {
+      const gg = g.trim();
+      if (gg) setG.add(gg);
+    });
+  });
+
+  // Tag TODOS
+  const todos = document.createElement('div');
+  todos.className = 'genre-tag active';
+  todos.textContent = 'TODOS';
+  todos.onclick = () => {
+    document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active'));
+    todos.classList.add('active');
+    listaActual = videos.slice();
+    mostrarPagina(1);
+    if (window.innerWidth <= 768) toggleMenu();
+  };
+  cont.appendChild(todos);
+
+  [...setG].sort((a,b)=>a.localeCompare(b,'es')).forEach(g => {
+    const el = document.createElement('div');
+    el.className = 'genre-tag';
+    el.textContent = g;
+    el.onclick = () => {
+      document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active'));
+      el.classList.add('active');
+      const key = g.toLowerCase();
+      listaActual = videos.filter(v => v.genero && v.genero.toLowerCase().includes(key));
       mostrarPagina(1);
-    }
+      if (window.innerWidth <= 768) toggleMenu();
+    };
+    cont.appendChild(el);
+  });
+}
 
-    function openVideo(id) {
-      window.open(`https://www.youtube.com/watch?v=${id}`, "_blank");
-    }
+/* -----------------------------
+   Overlay: reproducir + info + relacionados
+   ----------------------------- */
+function openOverlay(videoId){
+  const v = videos.find(x => x.id === videoId);
+  if (!v) return;
+  const overlay = document.getElementById('videoOverlay');
+  const iframe = document.getElementById('playerFrame');
+  // autoplay en embed
+  iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+  overlay.style.display = 'flex';
+  mostrarInfoVideo(v);
+  mostrarVideosRelacionados(v);
+}
 
-    function toggleMenu() {
-      // Placeholder si luego agregas menú lateral
-      console.log("Menú desplegable (no implementado)");
-    }
-  </script>
+function closeOverlay(){
+  document.getElementById('videoOverlay').style.display = 'none';
+  const iframe = document.getElementById('playerFrame');
+  iframe.src = '';
+  document.getElementById('videoInfo').innerHTML = '';
+  document.getElementById('relatedVideos').innerHTML = '';
+}
+
+function mostrarInfoVideo(video){
+  const cont = document.getElementById('videoInfo');
+  // tags clicables dentro del overlay: filtran por género
+  const generos = (video.genero || '').split(',').map(s=>s.trim()).filter(Boolean);
+  const tagsHtml = generos.map(g => `<button class="video-tag" onclick="filterFromTag('${escapeJs(g)}')">${escapeHtml(g)}</button>`).join(' ');
+  cont.innerHTML = `
+    <h2>${escapeHtml(video.titulo)}</h2>
+    <div class="author"><strong>Autor:</strong> ${escapeHtml(video.autor)}</div>
+    <div class="synopsis">${escapeHtml(video.sinopsis)}</div>
+    <div class="video-tags">${tagsHtml}</div>
+  `;
+}
+
+/* permitir filtrar desde tag dentro del overlay */
+function filterFromTag(g){
+  // encontrar el tag en la lista de géneros y activar
+  const el = [...document.querySelectorAll('.genre-tag')].find(x => x.textContent.toLowerCase() === g.toLowerCase());
+  if (el){
+    el.click();
+  } else {
+    // si no existe en sidebar, simplemente filtrar
+    listaActual = videos.filter(v => v.genero && v.genero.toLowerCase().includes(g.toLowerCase()));
+    // marcar ninguna tag activa
+    document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active'));
+    mostrarPagina(1);
+  }
+}
+
+/* calcular relacionados y renderizar */
+function mostrarVideosRelacionados(videoActual){
+  const container = document.getElementById('relatedVideos');
+  container.innerHTML = '';
+  // buscar por género compartido
+  const genAct = (videoActual.genero || '').toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
+  let relacionados = videos.filter(v => {
+    if (v.id === videoActual.id) return false;
+    const genV = (v.genero || '').toLowerCase().split(',').map(s=>s.trim());
+    return genAct.some(g => genV.includes(g));
+  });
+
+  // si pocos, completar con otros aleatorios
+  if (relacionados.length < 4) {
+    const otros = videos.filter(v => v.id !== videoActual.id && !relacionados.includes(v));
+    relacionados = relacionados.concat(otros);
+  }
+
+  relacionados = relacionados.sort(()=>Math.random()-0.5).slice(0,4);
+
+  if (relacionados.length === 0) return;
+  const title = document.createElement('h3');
+  title.textContent = 'Videos Relacionados';
+  title.style.margin = '0 0 10px';
+  const grid = document.createElement('div');
+  grid.className = 'related-grid';
+
+  relacionados.forEach(rv => {
+    const card = document.createElement('a');
+    card.className = 'related-card';
+    card.onclick = (e) => { e.preventDefault(); openOverlay(rv.id); };
+    card.innerHTML = `
+      <img src="https://img.youtube.com/vi/${rv.id}/hqdefault.jpg" alt="${escapeHtml(rv.titulo)}">
+      <div class="meta"><strong>${escapeHtml(rv.titulo)}</strong><div style="color:#aaa;font-size:.85rem">${escapeHtml(rv.autor)}</div></div>
+    `;
+    grid.appendChild(card);
+  });
+
+  container.appendChild(title);
+  container.appendChild(grid);
+}
+
+/* -----------------------------
+   Utilidades
+   ----------------------------- */
+function toggleMenu(){
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const isActive = sidebar.classList.toggle('active');
+  overlay.classList.toggle('show', isActive);
+}
+
+function openVideoExternal(id){
+  window.open(`https://www.youtube.com/watch?v=${id}`,'_blank');
+}
+
+/* helpers */
+function escapeHtml(str = '') {
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+function escapeJs(str=''){ return String(str).replace(/'/g,"\\'"); }
+function truncate(s, n=120){ return s && s.length>n ? s.slice(0,n-1)+'…' : (s||''); }
+
+/* -----------------------------
+   Mostrar primera pantalla sin problemas
+   ----------------------------- */
+</script>
 </body>
 </html>
