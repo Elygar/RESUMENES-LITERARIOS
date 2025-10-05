@@ -60,6 +60,8 @@
     .related-card{display:block;background:#222;border-radius:8px;overflow:hidden;cursor:pointer;color:#fff;text-decoration:none}
     .related-card img{width:100%;height:90px;object-fit:cover;display:block}
     .related-card .meta{padding:8px;font-size:.9rem;color:#ddd;word-wrap:break-word}
+    .report-btn{width:100%;padding:12px;background:#ff4444;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:16px;transition:background .3s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .report-btn:hover{background:#cc0000}
     
     .sidebar{position:fixed;left:-300px;top:0;height:100%;width:260px;background:var(--dark);color:#fff;padding:18px;transition:left .25s;z-index:2100;overflow:auto}
     .sidebar.active{left:0}
@@ -120,6 +122,7 @@
       .contact-modal{margin:10px}
       .contact-header h2{font-size:1.3rem}
       .contact-body{padding:20px}
+      .report-btn{font-size:.95rem;padding:10px}
     }
 
     @media(max-width:480px){
@@ -138,6 +141,7 @@
       .contact-modal{max-width:100%;margin:0}
       .contact-header{padding:15px}
       .contact-body{padding:15px}
+      .report-btn{font-size:.9rem;padding:10px}
     }
 
     @media(min-width:1400px){
@@ -536,6 +540,21 @@ function mostrarVideosRelacionados(videoActual){
 
   container.appendChild(title);
   container.appendChild(grid);
+  
+  // Agregar botón de reportar problema
+  const reportBtn = document.createElement('button');
+  reportBtn.className = 'report-btn';
+  reportBtn.innerHTML = '⚠️ Reportar un problema';
+  reportBtn.onclick = () => {
+    openContactForm();
+    // Pre-llenar el mensaje con información del video
+    setTimeout(() => {
+      const mensajeInput = document.getElementById('mensajeInput');
+      mensajeInput.value = `Reporte sobre: ${videoActual.titulo}\n\nDescribe el problema:\n`;
+      mensajeInput.focus();
+    }, 100);
+  };
+  container.appendChild(reportBtn);
 }
 
 function toggleMenu(){
