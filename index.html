@@ -69,6 +69,35 @@
     .genre-tag.active{background:#fff;color:var(--dark);border-color:#fff}
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2050}
     .sidebar-overlay.show{display:block}
+    
+    /* Botón ESCRÍBENOS en el sidebar */
+    .contact-btn{width:100%;padding:12px;background:#ff6b35;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:bold;cursor:pointer;margin-top:20px;transition:background .3s}
+    .contact-btn:hover{background:#ff8555}
+    
+    /* Modal del Formulario de Contacto */
+    .contact-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:3000;align-items:center;justify-content:center;padding:20px}
+    .contact-overlay.show{display:flex}
+    .contact-modal{background:#fff;border-radius:16px;width:100%;max-width:500px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+    .contact-header{background:linear-gradient(135deg,var(--primary),var(--dark));color:#fff;padding:20px;border-radius:16px 16px 0 0;text-align:center;position:relative}
+    .contact-header h2{margin:0;font-size:1.5rem}
+    .contact-close{position:absolute;right:15px;top:15px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:20px;transition:background .3s}
+    .contact-close:hover{background:rgba(255,255,255,.3)}
+    .contact-body{padding:25px}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;margin-bottom:6px;font-weight:600;color:#333;font-size:.95rem}
+    .form-group input,
+    .form-group textarea{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:8px;font-size:.95rem;font-family:inherit;transition:border-color .3s}
+    .form-group input:focus,
+    .form-group textarea:focus{outline:none;border-color:var(--primary)}
+    .form-group textarea{resize:vertical;min-height:120px}
+    .form-submit{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:background .3s}
+    .form-submit:hover{background:var(--dark)}
+    .form-submit:disabled{background:#bdbdbd;cursor:not-allowed}
+    .form-message{margin-top:15px;padding:12px;border-radius:8px;text-align:center;font-weight:600;display:none}
+    .form-message.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+    .form-message.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+    .form-message.show{display:block}
+    
     footer{background:var(--dark);color:#fff;text-align:center;padding:12px;font-size:14px}
 
     /* Responsive */
@@ -88,6 +117,9 @@
       .pagination button{padding:6px 10px;font-size:13px}
       .page-info{font-size:.85rem}
       .close-btn{right:8px;top:8px;width:32px;height:32px;font-size:16px}
+      .contact-modal{margin:10px}
+      .contact-header h2{font-size:1.3rem}
+      .contact-body{padding:20px}
     }
 
     @media(max-width:480px){
@@ -103,6 +135,9 @@
       .related-grid{grid-template-columns:repeat(2,1fr);gap:8px}
       .pagination button{padding:6px 8px;font-size:12px}
       .sidebar{width:240px;left:-240px}
+      .contact-modal{max-width:100%;margin:0}
+      .contact-header{padding:15px}
+      .contact-body{padding:15px}
     }
 
     @media(min-width:1400px){
@@ -122,6 +157,7 @@
   <div class="sidebar" id="sidebar" aria-hidden="true">
     <h3>GÉNEROS</h3>
     <div id="genreList" class="genre-tags" aria-label="Lista de géneros"></div>
+    <button class="contact-btn" onclick="openContactForm()">✉️ ESCRÍBENOS</button>
   </div>
   <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
 
@@ -151,7 +187,103 @@
     </div>
   </div>
 
+  <!-- Modal de Contacto -->
+  <div class="contact-overlay" id="contactOverlay" onclick="closeContactOnBackground(event)">
+    <div class="contact-modal" onclick="event.stopPropagation()">
+      <div class="contact-header">
+        <h2>📬 Contáctanos</h2>
+        <button class="contact-close" onclick="closeContactForm()">×</button>
+      </div>
+      <div class="contact-body">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="nombreInput">Nombre *</label>
+            <input type="text" id="nombreInput" name="nombre" required placeholder="Tu nombre completo">
+          </div>
+          <div class="form-group">
+            <label for="correoInput">Correo electrónico *</label>
+            <input type="email" id="correoInput" name="correo" required placeholder="tu@email.com">
+          </div>
+          <div class="form-group">
+            <label for="mensajeInput">Mensaje *</label>
+            <textarea id="mensajeInput" name="mensaje" required placeholder="Solicita un resumen, reporta un problema o déjanos tus comentarios..."></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="submitBtn">Enviar mensaje</button>
+          <div class="form-message" id="formMessage"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <footer><small>&copy; 2025 Audiolibros - Resúmenes en Video de Obras Literarias</small></footer>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAY2WuwPBjHDyzkDXXXhvwu3Inu3Ctl2eQ",
+    authDomain: "resumenes-literarios2.firebaseapp.com",
+    projectId: "resumenes-literarios2",
+    storageBucket: "resumenes-literarios2.firebasestorage.app",
+    messagingSenderId: "696816328291",
+    appId: "1:696816328291:web:70541497c1fdc76302e256"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.enviarFormulario = async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const formMessage = document.getElementById('formMessage');
+    const nombre = document.getElementById('nombreInput').value.trim();
+    const correo = document.getElementById('correoInput').value.trim();
+    const mensaje = document.getElementById('mensajeInput').value.trim();
+
+    if (!nombre || !correo || !mensaje) {
+      mostrarMensaje('Por favor completa todos los campos', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    formMessage.classList.remove('show');
+
+    try {
+      await addDoc(collection(db, 'mensajes'), {
+        nombre: nombre,
+        correo: correo,
+        mensaje: mensaje,
+        fecha: serverTimestamp()
+      });
+
+      mostrarMensaje('✅ ¡Mensaje enviado correctamente! Te responderemos pronto.', 'success');
+      document.getElementById('contactForm').reset();
+      
+      setTimeout(() => {
+        closeContactForm();
+      }, 2500);
+
+    } catch (error) {
+      console.error('Error:', error);
+      mostrarMensaje('❌ Error al enviar el mensaje. Intenta nuevamente.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar mensaje';
+    }
+  };
+
+  function mostrarMensaje(texto, tipo) {
+    const formMessage = document.getElementById('formMessage');
+    formMessage.textContent = texto;
+    formMessage.className = `form-message ${tipo} show`;
+  }
+
+  document.getElementById('contactForm').addEventListener('submit', window.enviarFormulario);
+</script>
 
 <script>
 let videos = [];
@@ -415,6 +547,23 @@ function toggleMenu(){
   else document.body.style.overflow = '';
 }
 
+function openContactForm(){
+  document.getElementById('contactOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  if (window.innerWidth <= 768) toggleMenu();
+}
+
+function closeContactForm(){
+  document.getElementById('contactOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  document.getElementById('contactForm').reset();
+  document.getElementById('formMessage').classList.remove('show');
+}
+
+function closeContactOnBackground(e){
+  if(e.target.id === 'contactOverlay') closeContactForm();
+}
+
 function compartirFacebook(url){
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
 }
@@ -432,10 +581,3 @@ function truncate(s, n=120){ return s && s.length>n ? s.slice(0,n-1)+'…' : (s|
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
