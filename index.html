@@ -437,6 +437,13 @@
     function mostrarResultados(listaVideos) {
       const lista = document.getElementById("videoList");
       lista.innerHTML = "";
+      
+      if (listaVideos.length === 0) {
+        lista.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No se encontraron resultados</p>';
+        document.getElementById("pagination").innerHTML = "";
+        return;
+      }
+      
       listaVideos.forEach(video => {
         const card = `
           <article class="card" itemscope itemtype="https://schema.org/VideoObject">
@@ -496,10 +503,15 @@
       document.querySelectorAll(".genre-tag").forEach(tag => tag.classList.remove("active"));
       if (el) el.classList.add("active");
 
-      const filtrados = (genre === "all")
-        ? videos
-        : videos.filter(video => video.genero.toLowerCase().includes(genre));
-      mostrarResultados(filtrados);
+      if (genre === "all") {
+        // En lugar de mostrar todos sin paginación, recarga la página 1 completa
+        mostrarPagina(1);
+      } else {
+        // Para géneros específicos, filtra y muestra sin paginación
+        const filtrados = videos.filter(video => video.genero.toLowerCase().includes(genre));
+        mostrarResultados(filtrados);
+      }
+      
       toggleMenu();
     }
   </script>
