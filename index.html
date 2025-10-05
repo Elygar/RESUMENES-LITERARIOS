@@ -44,6 +44,23 @@
     .video-info{padding:18px;background:#111;border-bottom:1px solid #222}
     .video-info .header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
     .video-info h2{margin:0;font-size:1.4rem;word-wrap:break-word;flex:1}
+    
+    /* Sistema de calificación con estrellas */
+    .rating-container{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+    .stars-display{display:flex;gap:3px;align-items:center}
+    .star{font-size:20px;color:#ffd700}
+    .star.empty{color:#444}
+    .rating-text{color:#aaa;font-size:.9rem}
+    .rate-btn{padding:6px 14px;background:var(--primary);color:#fff;border:none;border-radius:16px;cursor:pointer;font-size:.85rem;transition:background .3s}
+    .rate-btn:hover{background:var(--dark)}
+    .rate-stars{display:none;gap:5px;align-items:center}
+    .rate-stars.show{display:flex}
+    .rate-star{font-size:28px;color:#444;cursor:pointer;transition:all .2s;user-select:none}
+    .rate-star:hover,
+    .rate-star.hover{color:#ffd700;transform:scale(1.2)}
+    .rating-message{color:#4caf50;font-size:.85rem;margin-left:10px;display:none}
+    .rating-message.show{display:inline}
+    
     .share-buttons{display:flex;gap:8px;flex-shrink:0}
     .share-btn{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s}
     .share-btn:hover{transform:scale(1.1)}
@@ -72,11 +89,9 @@
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2050}
     .sidebar-overlay.show{display:block}
     
-    /* Botón ESCRÍBENOS en el sidebar */
     .contact-btn{width:100%;padding:12px;background:#ff6b35;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:bold;cursor:pointer;margin-top:20px;transition:background .3s}
     .contact-btn:hover{background:#ff8555}
     
-    /* Modal del Formulario de Contacto */
     .contact-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:3000;align-items:center;justify-content:center;padding:20px}
     .contact-overlay.show{display:flex}
     .contact-modal{background:#fff;border-radius:16px;width:100%;max-width:500px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3)}
@@ -102,7 +117,6 @@
     
     footer{background:var(--dark);color:#fff;text-align:center;padding:12px;font-size:14px}
 
-    /* Responsive */
     @media(max-width:768px){
       header h1{font-size:1.3rem;padding-right:50px}
       .search-container{padding:10px}
@@ -114,6 +128,9 @@
       .video-info .header-row{flex-direction:column;align-items:flex-start}
       .video-info h2{font-size:1.2rem}
       .share-buttons{margin-top:8px}
+      .rating-container{gap:8px}
+      .star{font-size:18px}
+      .rate-star{font-size:24px}
       .related-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
       .pagination{gap:6px;padding:10px}
       .pagination button{padding:6px 10px;font-size:13px}
@@ -135,6 +152,9 @@
       .video-info h2{font-size:1.1rem}
       .share-btn{width:32px;height:32px}
       .share-btn svg{width:18px;height:18px}
+      .rating-container{flex-direction:column;align-items:flex-start;gap:6px}
+      .star{font-size:16px}
+      .rate-star{font-size:22px}
       .related-grid{grid-template-columns:repeat(2,1fr);gap:8px}
       .pagination button{padding:6px 8px;font-size:12px}
       .sidebar{width:240px;left:-240px}
@@ -191,7 +211,6 @@
     </div>
   </div>
 
-  <!-- Modal de Contacto -->
   <div class="contact-overlay" id="contactOverlay" onclick="closeContactOnBackground(event)">
     <div class="contact-modal" onclick="event.stopPropagation()">
       <div class="contact-header">
@@ -221,10 +240,9 @@
 
   <footer><small>&copy; 2025 Audiolibros - Resúmenes en Video de Obras Literarias</small></footer>
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+  import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyAY2WuwPBjHDyzkDXXXhvwu3Inu3Ctl2eQ",
@@ -285,6 +303,56 @@
     formMessage.textContent = texto;
     formMessage.className = `form-message ${tipo} show`;
   }
+
+  window.obtenerCalificacion = async function(videoId) {
+    try {
+      const docRef = doc(db, 'calificaciones', videoId);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        return {
+          promedio: data.promedio || 0,
+          total: data.total || 0
+        };
+      }
+      return { promedio: 0, total: 0 };
+    } catch (error) {
+      console.error('Error obteniendo calificación:', error);
+      return { promedio: 0, total: 0 };
+    }
+  };
+
+  window.calificarVideo = async function(videoId, estrellas) {
+    try {
+      const docRef = doc(db, 'calificaciones', videoId);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const nuevoTotal = (data.total || 0) + 1;
+        const nuevaSuma = (data.suma || 0) + estrellas;
+        const nuevoPromedio = nuevaSuma / nuevoTotal;
+        
+        await updateDoc(docRef, {
+          total: nuevoTotal,
+          suma: nuevaSuma,
+          promedio: parseFloat(nuevoPromedio.toFixed(1))
+        });
+      } else {
+        await setDoc(docRef, {
+          total: 1,
+          suma: estrellas,
+          promedio: estrellas
+        });
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error al calificar:', error);
+      return false;
+    }
+  };
 
   document.getElementById('contactForm').addEventListener('submit', window.enviarFormulario);
 </script>
@@ -441,7 +509,7 @@ function cargarGeneros(){
   });
 }
 
-function openOverlay(videoId){
+async function openOverlay(videoId){
   const v = videos.find(x => x.id === videoId);
   if (!v) return;
   const overlay = document.getElementById('videoOverlay');
@@ -449,7 +517,7 @@ function openOverlay(videoId){
   iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   overlay.style.display = 'flex';
   document.body.style.overflow = 'hidden';
-  mostrarInfoVideo(v);
+  await mostrarInfoVideo(v);
   mostrarVideosRelacionados(v);
 }
 
@@ -466,7 +534,7 @@ function closeOverlayOnBackground(e){
   if(e.target.id === 'videoOverlay') closeOverlay();
 }
 
-function mostrarInfoVideo(video){
+async function mostrarInfoVideo(video){
   const cont = document.getElementById('videoInfo');
   const generos = (video.genero || '').split(',').map(s=>s.trim()).filter(Boolean);
   const tagsHtml = generos.map(g => `<button class="video-tag" onclick="filterFromTag('${escapeJs(g)}')">${escapeHtml(g)}</button>`).join(' ');
@@ -474,9 +542,23 @@ function mostrarInfoVideo(video){
   const videoUrl = `https://www.youtube.com/watch?v=${video.id}`;
   const shareText = `${video.titulo} - ${video.autor}`;
   
+  // Obtener calificación actual
+  const rating = await obtenerCalificacion(video.id);
+  const ratingHtml = generarEstrellas(rating.promedio, rating.total);
+  
   cont.innerHTML = `
     <div class="header-row">
-      <h2>${escapeHtml(video.titulo)}</h2>
+      <div style="flex:1">
+        <h2>${escapeHtml(video.titulo)}</h2>
+        <div class="rating-container" id="ratingContainer-${video.id}">
+          ${ratingHtml}
+          <button class="rate-btn" onclick="mostrarCalificar('${video.id}')">Calificar</button>
+          <div class="rate-stars" id="rateStars-${video.id}">
+            ${[1,2,3,4,5].map(n => `<span class="rate-star" onmouseover="hoverStar(${n}, '${video.id}')" onmouseout="resetStars('${video.id}')" onclick="enviarCalificacion('${video.id}', ${n})">★</span>`).join('')}
+            <span class="rating-message" id="ratingMsg-${video.id}">¡Gracias por calificar!</span>
+          </div>
+        </div>
+      </div>
       <div class="share-buttons">
         <button class="share-btn facebook" onclick="compartirFacebook('${escapeJs(videoUrl)}')" title="Compartir en Facebook">
           <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -490,6 +572,82 @@ function mostrarInfoVideo(video){
     <div class="synopsis">${escapeHtml(video.sinopsis)}</div>
     <div class="video-tags">${tagsHtml}</div>
   `;
+}
+
+function generarEstrellas(promedio, total) {
+  const estrellas = [];
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.round(promedio)) {
+      estrellas.push('<span class="star">★</span>');
+    } else {
+      estrellas.push('<span class="star empty">★</span>');
+    }
+  }
+  const textoRating = total > 0 ? `${promedio.toFixed(1)} (${total} ${total === 1 ? 'voto' : 'votos'})` : 'Sin calificaciones';
+  return `
+    <div class="stars-display">
+      ${estrellas.join('')}
+    </div>
+    <span class="rating-text">${textoRating}</span>
+  `;
+}
+
+function mostrarCalificar(videoId) {
+  const btn = document.querySelector(`#ratingContainer-${videoId} .rate-btn`);
+  const stars = document.getElementById(`rateStars-${videoId}`);
+  if (btn && stars) {
+    btn.style.display = 'none';
+    stars.classList.add('show');
+  }
+}
+
+function hoverStar(n, videoId) {
+  const stars = document.querySelectorAll(`#rateStars-${videoId} .rate-star`);
+  stars.forEach((star, i) => {
+    if (i < n) {
+      star.classList.add('hover');
+    } else {
+      star.classList.remove('hover');
+    }
+  });
+}
+
+function resetStars(videoId) {
+  const stars = document.querySelectorAll(`#rateStars-${videoId} .rate-star`);
+  stars.forEach(star => star.classList.remove('hover'));
+}
+
+async function enviarCalificacion(videoId, estrellas) {
+  const success = await calificarVideo(videoId, estrellas);
+  
+  if (success) {
+    const msg = document.getElementById(`ratingMsg-${videoId}`);
+    const starsDiv = document.getElementById(`rateStars-${videoId}`);
+    
+    if (msg) {
+      msg.classList.add('show');
+      setTimeout(() => {
+        msg.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Actualizar la visualización de estrellas
+    const rating = await obtenerCalificacion(videoId);
+    const container = document.getElementById(`ratingContainer-${videoId}`);
+    if (container) {
+      const ratingHtml = generarEstrellas(rating.promedio, rating.total);
+      container.innerHTML = `
+        ${ratingHtml}
+        <button class="rate-btn" onclick="mostrarCalificar('${videoId}')">Calificar</button>
+        <div class="rate-stars" id="rateStars-${videoId}">
+          ${[1,2,3,4,5].map(n => `<span class="rate-star" onmouseover="hoverStar(${n}, '${videoId}')" onmouseout="resetStars('${videoId}')" onclick="enviarCalificacion('${videoId}', ${n})">★</span>`).join('')}
+          <span class="rating-message" id="ratingMsg-${videoId}">¡Gracias por calificar!</span>
+        </div>
+      `;
+    }
+  } else {
+    alert('Error al enviar la calificación. Intenta nuevamente.');
+  }
 }
 
 function filterFromTag(g){
@@ -541,13 +699,11 @@ function mostrarVideosRelacionados(videoActual){
   container.appendChild(title);
   container.appendChild(grid);
   
-  // Agregar botón de reportar problema
   const reportBtn = document.createElement('button');
   reportBtn.className = 'report-btn';
   reportBtn.innerHTML = '⚠️ Reportar un problema';
   reportBtn.onclick = () => {
     openContactForm();
-    // Pre-llenar el mensaje con información del video
     setTimeout(() => {
       const mensajeInput = document.getElementById('mensajeInput');
       mensajeInput.value = `Reporte sobre: ${videoActual.titulo}\n\nDescribe el problema:\n`;
