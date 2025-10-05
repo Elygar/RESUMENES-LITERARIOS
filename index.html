@@ -253,12 +253,107 @@
       const totalPages = Math.ceil(videos.length / itemsPerPage);
       const pagContainer = document.getElementById("pagination");
       pagContainer.innerHTML = "";
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.onclick = () => mostrarPagina(i);
-        if (i === currentPage) btn.classList.add("active");
-        pagContainer.appendChild(btn);
+
+      if (totalPages <= 1) return;
+
+      // Botón "Inicio"
+      if (currentPage > 1) {
+        const btnInicio = document.createElement("button");
+        btnInicio.textContent = "Inicio";
+        btnInicio.onclick = () => mostrarPagina(1);
+        pagContainer.appendChild(btnInicio);
+      }
+
+      // Botón "Anterior"
+      if (currentPage > 1) {
+        const btnPrev = document.createElement("button");
+        btnPrev.textContent = "« Anterior";
+        btnPrev.onclick = () => mostrarPagina(currentPage - 1);
+        pagContainer.appendChild(btnPrev);
+      }
+
+      // Lógica de páginas visibles
+      if (totalPages <= 5) {
+        // Si hay 5 o menos páginas, mostrar todas
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i;
+          btn.onclick = () => mostrarPagina(i);
+          if (i === currentPage) btn.classList.add("active");
+          pagContainer.appendChild(btn);
+        }
+      } else {
+        // Si hay más de 5 páginas, mostrar solo algunas
+        let startPage, endPage;
+
+        if (currentPage <= 3) {
+          // Al inicio
+          startPage = 1;
+          endPage = 5;
+        } else if (currentPage >= totalPages - 2) {
+          // Al final
+          startPage = totalPages - 4;
+          endPage = totalPages;
+        } else {
+          // En el medio
+          startPage = currentPage - 2;
+          endPage = currentPage + 2;
+        }
+
+        // Primera página
+        if (startPage > 1) {
+          const btn = document.createElement("button");
+          btn.textContent = "1";
+          btn.onclick = () => mostrarPagina(1);
+          pagContainer.appendChild(btn);
+
+          if (startPage > 2) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            dots.style.padding = "6px 8px";
+            pagContainer.appendChild(dots);
+          }
+        }
+
+        // Páginas del rango
+        for (let i = startPage; i <= endPage; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i;
+          btn.onclick = () => mostrarPagina(i);
+          if (i === currentPage) btn.classList.add("active");
+          pagContainer.appendChild(btn);
+        }
+
+        // Última página
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            dots.style.padding = "6px 8px";
+            pagContainer.appendChild(dots);
+          }
+
+          const btn = document.createElement("button");
+          btn.textContent = totalPages;
+          btn.onclick = () => mostrarPagina(totalPages);
+          pagContainer.appendChild(btn);
+        }
+      }
+
+      // Botón "Siguiente"
+      if (currentPage < totalPages) {
+        const btnNext = document.createElement("button");
+        btnNext.textContent = "Siguiente »";
+        btnNext.onclick = () => mostrarPagina(currentPage + 1);
+        pagContainer.appendChild(btnNext);
+      }
+
+      // Botón "Final"
+      if (currentPage < totalPages) {
+        const btnFinal = document.createElement("button");
+        btnFinal.textContent = "Final";
+        btnFinal.onclick = () => mostrarPagina(totalPages);
+        pagContainer.appendChild(btnFinal);
       }
     }
 
