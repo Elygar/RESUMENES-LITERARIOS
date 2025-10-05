@@ -8,58 +8,95 @@
   <link rel="icon" href="favicon.ico" />
 
   <style>
-    /* --- estilos (basados en tu diseño original) --- */
     :root{--primary:#5e35b1;--dark:#311b92;}
+    *{box-sizing:border-box;}
     body{font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;margin:0;background:#f4f1fa;color:#333;display:flex;flex-direction:column;min-height:100vh}
     header{background:linear-gradient(90deg,var(--primary),var(--dark));color:#fff;padding:18px;text-align:center;position:relative}
     header h1{margin:0;font-size:1.6rem}
     .menu-btn{position:absolute;left:14px;top:10px;cursor:pointer;width:44px;height:44px}
     .menu-btn img{width:100%;height:100%;object-fit:contain}
-    .search-container{display:flex;justify-content:center;align-items:center;gap:10px;padding:14px}
-    .search-container input{width:60%;max-width:420px;padding:10px 14px;border-radius:22px;border:1px solid #ccc;font-size:14px}
-    .search-container button{padding:10px 16px;border-radius:22px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+    .search-container{display:flex;justify-content:center;align-items:center;gap:10px;padding:14px;flex-wrap:wrap}
+    .search-container input{width:100%;max-width:420px;padding:10px 14px;border-radius:22px;border:1px solid #ccc;font-size:14px;min-width:200px}
+    .search-container button{padding:10px 16px;border-radius:22px;border:none;background:var(--primary);color:#fff;cursor:pointer;white-space:nowrap}
     .search-container button:disabled{opacity:.6;cursor:not-allowed}
-    main{flex:1}
-    .wrap{max-width:1200px;margin:0 auto;padding:10px}
+    main{flex:1;width:100%}
+    .wrap{max-width:1200px;margin:0 auto;padding:10px;width:100%}
     .content{display:grid;grid-template-columns:1fr;gap:10px}
     .video-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;padding:18px}
     .card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08);transition:transform .18s}
     .card:hover{transform:translateY(-6px)}
     .card img{width:100%;height:160px;object-fit:cover;display:block}
     .card .card-content{padding:12px}
-    .card h3{margin:0;font-size:1rem;color:var(--dark)}
-    .card p{margin:6px 0;font-size:.9rem;color:#333}
+    .card h3{margin:0;font-size:1rem;color:var(--dark);word-wrap:break-word}
+    .card p{margin:6px 0;font-size:.9rem;color:#333;word-wrap:break-word}
     .btn{display:inline-block;padding:8px 14px;border-radius:18px;border:none;background:var(--primary);color:#fff;cursor:pointer}
     .btn.secondary{background:#666}
-    .pagination{display:flex;gap:8px;justify-content:center;align-items:center;padding:12px}
-    .pagination button{padding:8px 12px;border-radius:18px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+    .pagination{display:flex;gap:8px;justify-content:center;align-items:center;padding:12px;flex-wrap:wrap}
+    .pagination button{padding:8px 12px;border-radius:18px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-size:14px}
     .pagination button:disabled{background:#bdbdbd;cursor:not-allowed}
-    .page-info{font-size:.95rem;color:#444;margin-left:8px}
+    .page-info{font-size:.95rem;color:#444;margin:0 8px}
     #noResults{display:none;text-align:center;padding:40px;color:#666;font-size:1.1rem}
-    /* overlay */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;padding:20px}
-    .overlay .box{width:100%;max-width:980px;background:#111;border-radius:12px;overflow:hidden;color:#fff}
+    
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+    .overlay .box{width:100%;max-width:980px;background:#111;border-radius:12px;overflow:hidden;color:#fff;margin:auto;position:relative}
     .overlay iframe{width:100%;height:480px;border:0;display:block}
+    .close-btn{position:absolute;right:10px;top:10px;background:crimson;color:white;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;z-index:2200;font-size:18px}
     .video-info{padding:18px;background:#111;border-bottom:1px solid #222}
-    .video-info h2{margin:0 0 8px}
+    .video-info h2{margin:0 0 8px;font-size:1.4rem;word-wrap:break-word}
     .video-info .author{color:#bbb;margin-bottom:8px}
-    .video-info .synopsis{color:#ddd;line-height:1.5}
+    .video-info .synopsis{color:#ddd;line-height:1.5;word-wrap:break-word}
     .video-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .video-tag{background:var(--primary);padding:6px 10px;border-radius:14px;font-size:.85rem;cursor:pointer}
+    .video-tag{background:var(--primary);padding:6px 10px;border-radius:14px;font-size:.85rem;cursor:pointer;border:none;color:#fff}
     .related-videos{padding:16px;background:#0f0f0f}
+    .related-videos h3{margin:0 0 10px;font-size:1.2rem}
     .related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-    .related-card{display:block;background:#222;border-radius:8px;overflow:hidden;cursor:pointer;color:#fff}
+    .related-card{display:block;background:#222;border-radius:8px;overflow:hidden;cursor:pointer;color:#fff;text-decoration:none}
     .related-card img{width:100%;height:90px;object-fit:cover;display:block}
-    .related-card .meta{padding:8px;font-size:.9rem;color:#ddd}
+    .related-card .meta{padding:8px;font-size:.9rem;color:#ddd;word-wrap:break-word}
+    
     .sidebar{position:fixed;left:-300px;top:0;height:100%;width:260px;background:var(--dark);color:#fff;padding:18px;transition:left .25s;z-index:2100;overflow:auto}
     .sidebar.active{left:0}
+    .sidebar h3{text-align:center;margin:0 0 12px;font-size:1.2rem}
     .genre-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-    .genre-tag{border:1px solid rgba(255,255,255,.2);padding:8px 10px;border-radius:12px;cursor:pointer;font-size:.85rem;text-transform:uppercase}
+    .genre-tag{border:1px solid rgba(255,255,255,.2);padding:8px 10px;border-radius:12px;cursor:pointer;font-size:.85rem;text-transform:uppercase;background:transparent;color:#fff}
     .genre-tag.active{background:#fff;color:var(--dark);border-color:#fff}
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2050}
     .sidebar-overlay.show{display:block}
-    footer{background:var(--dark);color:#fff;text-align:center;padding:12px}
-    @media(max-width:640px){ .search-container input{width:70%} .overlay iframe{height:260px} }
+    footer{background:var(--dark);color:#fff;text-align:center;padding:12px;font-size:14px}
+
+    /* Responsive */
+    @media(max-width:768px){
+      header h1{font-size:1.3rem;padding-right:50px}
+      .search-container{padding:10px}
+      .search-container input{width:calc(100% - 100px);min-width:150px}
+      .video-list{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:12px}
+      .overlay .box{margin:10px;max-height:95vh;overflow-y:auto}
+      .overlay iframe{height:260px}
+      .video-info{padding:14px}
+      .video-info h2{font-size:1.2rem}
+      .related-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+      .pagination{gap:6px;padding:10px}
+      .pagination button{padding:6px 10px;font-size:13px}
+      .page-info{font-size:.85rem}
+      .close-btn{right:8px;top:8px;width:32px;height:32px;font-size:16px}
+    }
+
+    @media(max-width:480px){
+      header h1{font-size:1.1rem}
+      .search-container input{width:calc(100% - 90px);font-size:13px}
+      .search-container button{padding:8px 12px;font-size:13px}
+      .video-list{grid-template-columns:1fr;padding:10px}
+      .card img{height:200px}
+      .overlay iframe{height:220px}
+      .video-info h2{font-size:1.1rem}
+      .related-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+      .pagination button{padding:6px 8px;font-size:12px}
+      .sidebar{width:240px;left:-240px}
+    }
+
+    @media(min-width:1400px){
+      .video-list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+    }
   </style>
 </head>
 <body>
@@ -72,7 +109,7 @@
   </header>
 
   <div class="sidebar" id="sidebar" aria-hidden="true">
-    <h3 style="text-align:center;margin:0 0 6px">GÉNEROS</h3>
+    <h3>GÉNEROS</h3>
     <div id="genreList" class="genre-tags" aria-label="Lista de géneros"></div>
   </div>
   <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
@@ -84,19 +121,17 @@
         <button id="searchBtn" onclick="buscar()">Buscar</button>
       </div>
 
-      <div id="noResults" >Página no encontrada.</div>
+      <div id="noResults">Página no encontrada.</div>
 
-      <section class="video-list" id="videoList" aria-live="polite" ></section>
+      <section class="video-list" id="videoList" aria-live="polite"></section>
 
-      <div class="pagination" id="paginationBar" role="navigation" aria-label="Paginación">
-        <!-- botones generados dinámicamente -->
-      </div>
+      <div class="pagination" id="paginationBar" role="navigation" aria-label="Paginación"></div>
     </div>
   </main>
 
-  <div class="overlay" id="videoOverlay" role="dialog" aria-modal="true">
-    <div class="box">
-      <button class="close-btn" style="position:absolute;right:22px;top:18px;background:crimson;color:white;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;z-index:2200" onclick="closeOverlay()">✖</button>
+  <div class="overlay" id="videoOverlay" role="dialog" aria-modal="true" onclick="closeOverlayOnBackground(event)">
+    <div class="box" onclick="event.stopPropagation()">
+      <button class="close-btn" onclick="closeOverlay()">✖</button>
       <div id="playerWrap">
         <iframe id="playerFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
@@ -108,15 +143,11 @@
   <footer><small>&copy; 2025 Audiolibros - Resúmenes en Video de Obras Literarias</small></footer>
 
 <script>
-/* -----------------------------
-   Variables y estado
-   ----------------------------- */
 let videos = [];
-let listaActual = [];       // lista filtrada/actual
+let listaActual = [];
 let currentPage = 1;
 const itemsPerPage = 12;
 
-/* --- Cargar JSON --- */
 fetch('videos.json?t=' + Date.now())
   .then(r => r.json())
   .then(data => {
@@ -131,10 +162,6 @@ fetch('videos.json?t=' + Date.now())
     document.getElementById('noResults').style.display = 'block';
   });
 
-
-/* -----------------------------
-   Renderizado de lista / paginación
-   ----------------------------- */
 function mostrarPagina(page){
   const listEl = document.getElementById('videoList');
   const noResEl = document.getElementById('noResults');
@@ -155,7 +182,6 @@ function mostrarPagina(page){
   const start = (currentPage - 1) * itemsPerPage;
   const slice = listaActual.slice(start, start + itemsPerPage);
 
-  // fragment para evitar repaints excesivos
   const frag = document.createDocumentFragment();
   slice.forEach(v => {
     const art = document.createElement('article');
@@ -172,9 +198,9 @@ function mostrarPagina(page){
   });
   listEl.appendChild(frag);
   renderPaginacion(Math.ceil(listaActual.length / itemsPerPage));
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
-/* Paginación: Inicio / Anterior / Siguiente y "Página X de Y" */
 function renderPaginacion(totalPages) {
   const p = document.getElementById('paginationBar');
   p.innerHTML = '';
@@ -204,11 +230,11 @@ function renderPaginacion(totalPages) {
   p.appendChild(btnNext);
 }
 
-/* -----------------------------
-   Búsqueda con botón "Buscar"
-   ----------------------------- */
 document.getElementById('searchInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') e.preventDefault(); // evitar submit/recarga por Enter
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    buscar();
+  }
 });
 
 function buscar(){
@@ -218,7 +244,6 @@ function buscar(){
     mostrarPagina(1);
     return;
   }
-  // filtra por título, autor, sinopsis (coincidencia parcial)
   listaActual = videos.filter(v => 
     (v.titulo && v.titulo.toLowerCase().includes(texto)) ||
     (v.autor && v.autor.toLowerCase().includes(texto)) ||
@@ -228,9 +253,6 @@ function buscar(){
   mostrarPagina(1);
 }
 
-/* -----------------------------
-   Tags / Géneros
-   ----------------------------- */
 function cargarGeneros(){
   const cont = document.getElementById('genreList');
   cont.innerHTML = '';
@@ -244,7 +266,6 @@ function cargarGeneros(){
     });
   });
 
-  // Tag TODOS
   const todos = document.createElement('div');
   todos.className = 'genre-tag active';
   todos.textContent = 'TODOS';
@@ -273,32 +294,33 @@ function cargarGeneros(){
   });
 }
 
-/* -----------------------------
-   Overlay: reproducir + info + relacionados
-   ----------------------------- */
 function openOverlay(videoId){
   const v = videos.find(x => x.id === videoId);
   if (!v) return;
   const overlay = document.getElementById('videoOverlay');
   const iframe = document.getElementById('playerFrame');
-  // autoplay en embed
   iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
   mostrarInfoVideo(v);
   mostrarVideosRelacionados(v);
 }
 
 function closeOverlay(){
   document.getElementById('videoOverlay').style.display = 'none';
+  document.body.style.overflow = '';
   const iframe = document.getElementById('playerFrame');
   iframe.src = '';
   document.getElementById('videoInfo').innerHTML = '';
   document.getElementById('relatedVideos').innerHTML = '';
 }
 
+function closeOverlayOnBackground(e){
+  if(e.target.id === 'videoOverlay') closeOverlay();
+}
+
 function mostrarInfoVideo(video){
   const cont = document.getElementById('videoInfo');
-  // tags clicables dentro del overlay: filtran por género
   const generos = (video.genero || '').split(',').map(s=>s.trim()).filter(Boolean);
   const tagsHtml = generos.map(g => `<button class="video-tag" onclick="filterFromTag('${escapeJs(g)}')">${escapeHtml(g)}</button>`).join(' ');
   cont.innerHTML = `
@@ -309,26 +331,21 @@ function mostrarInfoVideo(video){
   `;
 }
 
-/* permitir filtrar desde tag dentro del overlay */
 function filterFromTag(g){
-  // encontrar el tag en la lista de géneros y activar
+  closeOverlay();
   const el = [...document.querySelectorAll('.genre-tag')].find(x => x.textContent.toLowerCase() === g.toLowerCase());
   if (el){
     el.click();
   } else {
-    // si no existe en sidebar, simplemente filtrar
     listaActual = videos.filter(v => v.genero && v.genero.toLowerCase().includes(g.toLowerCase()));
-    // marcar ninguna tag activa
     document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active'));
     mostrarPagina(1);
   }
 }
 
-/* calcular relacionados y renderizar */
 function mostrarVideosRelacionados(videoActual){
   const container = document.getElementById('relatedVideos');
   container.innerHTML = '';
-  // buscar por género compartido
   const genAct = (videoActual.genero || '').toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
   let relacionados = videos.filter(v => {
     if (v.id === videoActual.id) return false;
@@ -336,7 +353,6 @@ function mostrarVideosRelacionados(videoActual){
     return genAct.some(g => genV.includes(g));
   });
 
-  // si pocos, completar con otros aleatorios
   if (relacionados.length < 4) {
     const otros = videos.filter(v => v.id !== videoActual.id && !relacionados.includes(v));
     relacionados = relacionados.concat(otros);
@@ -347,7 +363,6 @@ function mostrarVideosRelacionados(videoActual){
   if (relacionados.length === 0) return;
   const title = document.createElement('h3');
   title.textContent = 'Videos Relacionados';
-  title.style.margin = '0 0 10px';
   const grid = document.createElement('div');
   grid.className = 'related-grid';
 
@@ -366,30 +381,20 @@ function mostrarVideosRelacionados(videoActual){
   container.appendChild(grid);
 }
 
-/* -----------------------------
-   Utilidades
-   ----------------------------- */
 function toggleMenu(){
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebarOverlay');
   const isActive = sidebar.classList.toggle('active');
   overlay.classList.toggle('show', isActive);
+  if(isActive) document.body.style.overflow = 'hidden';
+  else document.body.style.overflow = '';
 }
 
-function openVideoExternal(id){
-  window.open(`https://www.youtube.com/watch?v=${id}`,'_blank');
-}
-
-/* helpers */
 function escapeHtml(str = '') {
   return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
 }
 function escapeJs(str=''){ return String(str).replace(/'/g,"\\'"); }
 function truncate(s, n=120){ return s && s.length>n ? s.slice(0,n-1)+'…' : (s||''); }
-
-/* -----------------------------
-   Mostrar primera pantalla sin problemas
-   ----------------------------- */
 </script>
 </body>
 </html>
