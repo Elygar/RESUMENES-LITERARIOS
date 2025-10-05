@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Audiolibros y Resúmenes en Video de Obras Literarias | Biblioteca Digital</title>
-  <meta name="description" content="Descubre resúmenes en video de las mejores obras literarias y audiolibros. Aprende rápido con análisis de libros clásicos y contemporáneos organizados por género." />
-  <meta name="keywords" content="audiolibros, resúmenes de libros, obras literarias, videos educativos, análisis literario, libros resumidos, literatura clásica, libros contemporáneos" />
-  <meta name="author" content="Audiolibros" />
+  <title>Audiolibros y Resúmenes en Video de Obras Literarias</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
-
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #f4f1fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f1fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
     header { background: linear-gradient(90deg, #5e35b1, #311b92); color: white; padding: 20px; text-align: center; position: relative; }
     header h1 { margin: 0; font-size: 2rem; font-weight: 600; }
-    .menu-btn { position: absolute; left: 20px; top: 10px; cursor: pointer; z-index: 1300; width: 50px; height: 50px; padding: 5px; transition: transform 0.2s ease; }
+    .menu-btn { position: absolute; left: 20px; top: 10px; cursor: pointer; z-index: 1300; width: 45px; height: 45px; padding: 5px; transition: transform 0.2s ease; }
     .menu-btn:hover { transform: scale(1.1); }
     .menu-btn img { width: 100%; height: 100%; object-fit: contain; }
     .menu-btn.hidden { display: none; }
@@ -34,8 +30,7 @@
     .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1100; }
     .sidebar { position: fixed; top: 0; left: -290px; width: 250px; height: 100%; background: #311b92; color: white; padding: 20px; transition: left 0.3s ease; z-index: 1200; overflow-y: auto; }
     .sidebar.active { left: 0; }
-    .genre-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 15px; }
-    .genre-tag { border: 1px solid white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; text-transform: uppercase; transition: all 0.2s ease; }
+    .genre-tag { border: 1px solid white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; text-transform: uppercase; margin: 3px; transition: all 0.2s ease; }
     .genre-tag:hover, .genre-tag.active { background: white; color: #311b92; }
     footer { background: #311b92; color: #fff; text-align: center; padding: 15px; margin-top: auto; }
   </style>
@@ -50,8 +45,7 @@
 
   <main>
     <div class="search-container">
-      <!-- prevenir enter -->
-      <input type="text" id="searchInput" placeholder="Buscar por título, autor o sinopsis..." aria-label="Buscar libros" onkeypress="return event.key !== 'Enter'">
+      <input type="search" id="searchInput" placeholder="Buscar por título, autor o sinopsis..." autocomplete="off" onkeypress="return event.key !== 'Enter'">
     </div>
 
     <section class="video-list" id="videoList"></section>
@@ -83,13 +77,12 @@
     const itemsPerPage = 30;
 
     fetch('videos.json?t=' + new Date().getTime())
-      .then(response => response.json())
+      .then(r => r.json())
       .then(data => {
         videos = data;
         mostrarPagina(1);
         cargarGeneros();
-      })
-      .catch(error => console.error('Error cargando JSON:', error));
+      });
 
     function mostrarPagina(page) {
       currentPage = page;
@@ -98,18 +91,17 @@
       const start = (page - 1) * itemsPerPage;
       const end = start + itemsPerPage;
       const paginaVideos = videos.slice(start, end);
-
       paginaVideos.forEach(video => {
-        lista.innerHTML += `
+        lista.insertAdjacentHTML('beforeend', `
           <article class="card">
-            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="Resumen de ${video.titulo}">
+            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.titulo}">
             <div class="card-content">
               <h3>${video.titulo}</h3>
               <p><strong>Autor:</strong> ${video.autor}</p>
               <p>${video.sinopsis}</p>
               <button class="btn" onclick="openOverlay('${video.id}')">Ver más</button>
             </div>
-          </article>`;
+          </article>`);
       });
       generarPaginacion();
     }
@@ -131,10 +123,9 @@
       const videoActual = videos.find(v => v.id === videoId);
       document.getElementById("videoOverlay").style.display = "flex";
       document.getElementById("player").innerHTML = `
-        <iframe width="100%" height="500"
-          src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-          allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        <iframe width="100%" height="500" src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
       mostrarInfoVideo(videoActual);
+      mostrarVideosRelacionados(videoActual);
     }
 
     function closeOverlay() {
@@ -142,8 +133,43 @@
       document.getElementById("player").innerHTML = "";
     }
 
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-      const filter = this.value.toLowerCase();
+    function mostrarInfoVideo(video) {
+      const container = document.getElementById("videoInfo");
+      const generos = video.genero.split(",").map(g => g.trim());
+      const tags = generos.map(g => `<span class="video-tag">${g}</span>`).join("");
+      container.innerHTML = `<h2>${video.titulo}</h2><p><strong>Autor:</strong> ${video.autor}</p><p>${video.sinopsis}</p><div>${tags}</div>`;
+    }
+
+    function mostrarVideosRelacionados(videoActual) {
+      const container = document.getElementById("relatedVideos");
+      let relacionados = videos.filter(v => {
+        if (v.id === videoActual.id) return false;
+        const generosActual = videoActual.genero.toLowerCase().split(",").map(g => g.trim());
+        const generosVideo = v.genero.toLowerCase().split(",").map(g => g.trim());
+        return generosActual.some(g => generosVideo.includes(g));
+      });
+      if (relacionados.length < 4) {
+        const otros = videos.filter(v => v.id !== videoActual.id && !relacionados.includes(v));
+        relacionados = [...relacionados, ...otros];
+      }
+      relacionados = relacionados.sort(() => Math.random() - 0.5).slice(0, 4);
+      let html = '<h3>Videos Relacionados</h3><div class="related-grid">';
+      relacionados.forEach(video => {
+        html += `
+          <div class="related-card" onclick="openOverlay('${video.id}')">
+            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg">
+            <div class="related-card-content">
+              <h4>${video.titulo}</h4>
+              <p>${video.autor}</p>
+            </div>
+          </div>`;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      const filter = e.target.value.toLowerCase().trim();
       const filtrados = videos.filter(video =>
         video.titulo.toLowerCase().includes(filter) ||
         video.autor.toLowerCase().includes(filter) ||
@@ -156,44 +182,41 @@
       const lista = document.getElementById("videoList");
       lista.innerHTML = "";
       listaVideos.forEach(video => {
-        lista.innerHTML += `
+        lista.insertAdjacentHTML('beforeend', `
           <article class="card">
-            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="Resumen de ${video.titulo}">
+            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.titulo}">
             <div class="card-content">
               <h3>${video.titulo}</h3>
               <p><strong>Autor:</strong> ${video.autor}</p>
               <p>${video.sinopsis}</p>
               <button class="btn" onclick="openOverlay('${video.id}')">Ver más</button>
             </div>
-          </article>`;
+          </article>`);
       });
       document.getElementById("pagination").innerHTML = "";
     }
 
     function toggleMenu() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const menuBtn = document.getElementById('menuBtn');
-      sidebar.classList.toggle('active');
-      overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
-      menuBtn.classList.toggle('hidden', sidebar.classList.contains('active'));
+      requestAnimationFrame(() => {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const menuBtn = document.getElementById('menuBtn');
+        const active = sidebar.classList.toggle('active');
+        overlay.style.display = active ? 'block' : 'none';
+        menuBtn.classList.toggle('hidden', active);
+      });
     }
 
     function cargarGeneros() {
       const contenedor = document.getElementById("genreList");
       contenedor.innerHTML = "";
-
       const tagTodos = document.createElement("div");
       tagTodos.textContent = "TODOS";
       tagTodos.className = "genre-tag";
       tagTodos.onclick = () => filterGenre("all", tagTodos);
       contenedor.appendChild(tagTodos);
-
-      let generos = new Set();
-      videos.forEach(video => {
-        video.genero.split(",").forEach(g => generos.add(g.trim().toUpperCase()));
-      });
-
+      const generos = new Set();
+      videos.forEach(v => v.genero.split(",").forEach(g => generos.add(g.trim().toUpperCase())));
       [...generos].sort().forEach(g => {
         const tag = document.createElement("div");
         tag.textContent = g;
@@ -207,12 +230,13 @@
       document.querySelectorAll(".genre-tag").forEach(tag => tag.classList.remove("active"));
       if (el) el.classList.add("active");
 
-      const filtrados = (genre === "all")
-        ? videos
-        : videos.filter(video => video.genero.toLowerCase().includes(genre));
-      mostrarResultados(filtrados);
+      if (genre === "all") {
+        mostrarPagina(1); // 🔄 vuelve al inicio
+      } else {
+        const filtrados = videos.filter(v => v.genero.toLowerCase().includes(genre));
+        mostrarResultados(filtrados);
+      }
 
-      // 🧠 Cierra menú solo en móviles
       if (window.innerWidth <= 768) {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
