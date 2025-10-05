@@ -509,6 +509,12 @@ function renderPaginacion(totalPages) {
   btnNext.disabled = currentPage === totalPages;
   btnNext.onclick = () => mostrarPagina(currentPage + 1);
   p.appendChild(btnNext);
+
+  const btnUltimo = document.createElement('button');
+  btnUltimo.textContent = 'Último';
+  btnUltimo.disabled = currentPage === totalPages;
+  btnUltimo.onclick = () => mostrarPagina(totalPages);
+  p.appendChild(btnUltimo);
 }
 
 document.getElementById('searchInput').addEventListener('keydown', e => {
