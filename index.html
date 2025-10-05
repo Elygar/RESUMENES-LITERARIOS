@@ -3,153 +3,507 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resúmenes Literarios y Audiolibros | Biblioteca Digital</title>
-  <meta name="description" content="Explora resúmenes literarios y audiolibros organizados por género, autor y tema. Encuentra tus obras favoritas y aprende de manera rápida y entretenida.">
-  <meta name="keywords" content="resúmenes literarios, audiolibros, análisis de libros, literatura, novelas, poesía, clásicos">
-  <meta name="author" content="Biblioteca Digital">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  
+  <!-- SEO Meta Tags -->
+  <title>Audiolibros y Resúmenes en Video de Obras Literarias | Biblioteca Digital</title>
+  <meta name="description" content="Descubre resúmenes en video de las mejores obras literarias y audiolibros. Aprende rápido con análisis de libros clásicos y contemporáneos organizados por género." />
+  <meta name="keywords" content="audiolibros, resúmenes de libros, obras literarias, videos educativos, análisis literario, libros resumidos, literatura clásica, libros contemporáneos" />
+  <meta name="author" content="Audiolibros" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="Spanish" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://elygar.github.io/RESUMENES-LITERARIOS/" />
+  <meta property="og:title" content="Audiolibros - Resúmenes en Video de Obras Literarias" />
+  <meta property="og:description" content="La mejor colección de resúmenes en video de obras literarias. Aprende y descubre nuevos libros de forma rápida y entretenida." />
+  <meta property="og:image" content="https://elygar.github.io/RESUMENES-LITERARIOS/preview-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="es_ES" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://elygar.github.io/RESUMENES-LITERARIOS/" />
+  <meta property="twitter:title" content="Audiolibros - Resúmenes en Video de Obras Literarias" />
+  <meta property="twitter:description" content="La mejor colección de resúmenes en video de obras literarias." />
+  <meta property="twitter:image" content="https://elygar.github.io/RESUMENES-LITERARIOS/preview-image.jpg" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://elygar.github.io/RESUMENES-LITERARIOS/" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  
   <style>
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #f4f1fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #f4f1fa; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
     header { background: linear-gradient(90deg, #5e35b1, #311b92); color: white; padding: 20px; text-align: center; position: relative; }
-    header h1 { margin: 0; font-size: 2rem; }
-    .menu-btn { position: absolute; left: 20px; top: 10px; cursor: pointer; width: 45px; height: 45px; }
+    header h1 { margin: 0; font-size: 2rem; font-weight: 600; }
+    @media (max-width: 768px) {
+      header { padding: 15px; }
+      header h1 { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.2rem; }
+    }
+    .menu-btn { position: absolute; left: 20px; top: 10px; cursor: pointer; z-index: 1300; width: 50px; height: 50px; padding: 5px; transition: transform 0.2s ease; }
+    .menu-btn:hover { transform: scale(1.1); }
     .menu-btn img { width: 100%; height: 100%; object-fit: contain; }
+    .menu-btn.hidden { display: none; }
+    @media (max-width: 768px) {
+      .menu-btn { width: 45px; height: 45px; left: 2px; top: 2px; }
+    }
+    @media (max-width: 480px) {
+      .menu-btn { width: 40px; height: 40px; left: 2px; top: 2px; }
+    }
     .search-container { text-align: center; margin: 20px; }
     .search-container input { width: 90%; max-width: 500px; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    @media (max-width: 768px) {
+      .search-container { margin: 15px 10px; }
+      .search-container input { width: 85%; padding: 10px; font-size: 14px; }
+    }
     .video-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
+    @media (max-width: 768px) {
+      .video-list { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px 10px; }
+    }
+    @media (max-width: 480px) {
+      .video-list { grid-template-columns: 1fr; gap: 15px; padding: 10px; }
+    }
     .card { background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s ease; }
     .card:hover { transform: translateY(-5px); }
     .card img { width: 100%; height: 180px; object-fit: cover; }
     .card-content { padding: 15px; }
-    .btn { display: inline-block; margin-top: 10px; padding: 8px 16px; background: #5e35b1; color: white; border: none; border-radius: 25px; cursor: pointer; transition: background 0.2s ease; }
+    .card-content h3 { margin: 0 0 5px; font-size: 1.2rem; color: #4527a0; }
+    .card-content p { font-size: 0.95rem; margin: 5px 0; }
+    @media (max-width: 768px) {
+      .card img { height: 140px; }
+      .card-content { padding: 12px; }
+      .card-content h3 { font-size: 1rem; }
+      .card-content p { font-size: 0.85rem; }
+    }
+    @media (max-width: 480px) {
+      .card img { height: 200px; }
+      .card-content h3 { font-size: 1.1rem; }
+    }
+    .btn { display: inline-block; margin-top: 10px; padding: 8px 16px; background: #5e35b1; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s ease; }
     .btn:hover { background: #311b92; }
+    @media (max-width: 768px) {
+      .btn { padding: 7px 14px; font-size: 0.85rem; }
+    }
+    .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+    .overlay-content { position: relative; width: 90%; max-width: 900px; background: #1a1a1a; border-radius: 12px; overflow: hidden; max-height: 90vh; overflow-y: auto; }
+    .overlay iframe { width: 100%; height: 500px; border: none; }
+    @media (max-width: 768px) {
+      .overlay iframe { height: 250px; }
+      .overlay-content { width: 95%; max-height: 95vh; }
+    }
+    .video-info { padding: 20px; background: #1a1a1a; border-bottom: 1px solid #333; }
+    .video-info h2 { color: white; margin: 0 0 10px 0; font-size: 1.5rem; }
+    .video-info .author { color: #aaa; font-size: 1rem; margin-bottom: 15px; }
+    .video-info .synopsis { color: #ddd; line-height: 1.6; margin-bottom: 15px; font-size: 0.95rem; }
+    .video-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .video-tag { background: #5e35b1; color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.85rem; display: inline-block; }
+    @media (max-width: 768px) {
+      .video-info { padding: 15px; }
+      .video-info h2 { font-size: 1.2rem; }
+      .video-info .author { font-size: 0.9rem; }
+      .video-info .synopsis { font-size: 0.85rem; }
+      .video-tag { font-size: 0.75rem; padding: 5px 10px; }
+    }
+    .related-videos { padding: 20px; background: #1a1a1a; }
+    .related-videos h3 { color: white; margin: 0 0 15px 0; font-size: 1.3rem; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+    @media (max-width: 768px) {
+      .related-videos { padding: 15px; }
+      .related-videos h3 { font-size: 1.1rem; }
+      .related-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+    @media (max-width: 480px) {
+      .related-grid { grid-template-columns: 1fr; }
+    }
+    .related-card { background: #2a2a2a; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease; }
+    .related-card:hover { transform: scale(1.05); }
+    .related-card img { width: 100%; height: 100px; object-fit: cover; }
+    .related-card-content { padding: 10px; }
+    .related-card-content h4 { color: white; margin: 0; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .related-card-content p { color: #aaa; font-size: 0.8rem; margin: 5px 0 0 0; }
+    @media (max-width: 768px) {
+      .related-card img { height: 120px; }
+      .related-card-content { padding: 8px; }
+      .related-card-content h4 { font-size: 0.85rem; }
+      .related-card-content p { font-size: 0.75rem; }
+    }
+    .close-btn { position: absolute; top: 10px; right: 10px; background: crimson; color: white; border: none; font-size: 20px; padding: 5px 10px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 10; }
+    @media (max-width: 768px) {
+      .close-btn { top: 5px; right: 5px; font-size: 18px; padding: 4px 8px; }
+    }
+    .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1100; }
     .sidebar { position: fixed; top: 0; left: -290px; width: 250px; height: 100%; background: #311b92; color: white; padding: 20px; transition: left 0.3s ease; z-index: 1200; overflow-y: auto; }
     .sidebar.active { left: 0; }
-    .genre-tag { border: 1px solid white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; text-transform: uppercase; margin: 3px; transition: all 0.2s ease; }
+    .sidebar h3 { margin-top: 0; }
+    .genre-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 15px; }
+    .genre-tag { border: 1px solid white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; text-transform: uppercase; transition: all 0.2s ease; }
     .genre-tag:hover, .genre-tag.active { background: white; color: #311b92; }
-    .no-results { text-align: center; padding: 40px; font-size: 1.2rem; color: #777; }
-    footer { background: #311b92; color: white; text-align: center; padding: 15px; margin-top: auto; }
+    #pagination { text-align: center; margin: 20px; }
+    #pagination button { margin: 2px; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; background: #eee; }
+    #pagination button.active { background: #5e35b1; color: white; }
+    @media (max-width: 768px) {
+      #pagination { margin: 15px 10px; }
+      #pagination button { padding: 5px 10px; font-size: 0.9rem; }
+    }
+    footer { background: #311b92; color: #fff; text-align: center; padding: 15px; margin-top: auto; }
+    footer a { color: #ffeb3b; text-decoration: none; margin: 0 8px; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <header>
     <h1>RESÚMENES LITERARIOS</h1>
-    <div class="menu-btn" onclick="toggleMenu()"><img src="favicon.png" alt="Menú"></div>
+    <div class="menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Abrir menú de géneros">
+      <img src="favicon.png" alt="Menú Audiolibros">
+    </div>
   </header>
 
   <main>
     <div class="search-container">
-      <input type="search" id="searchInput" placeholder="Buscar por título, autor o género..." autocomplete="off" onkeypress="return event.key !== 'Enter'">
+      <input type="text" id="searchInput" placeholder="Buscar por título, autor o sinopsis..." aria-label="Buscar libros">
     </div>
 
-    <section class="video-list" id="videoList"></section>
-    <div id="noResults" class="no-results" style="display:none;">No se encontraron resultados.</div>
+    <section class="video-list" id="videoList" aria-label="Colección de audiolibros"></section>
+    <nav id="pagination" aria-label="Paginación de resultados"></nav>
   </main>
 
-  <aside class="sidebar" id="sidebar">
+  <div class="overlay" id="videoOverlay" role="dialog" aria-modal="true" aria-label="Reproductor de video">
+    <div class="overlay-content">
+      <button class="close-btn" onclick="closeOverlay()" aria-label="Cerrar reproductor">✖</button>
+      <div id="player"></div>
+      <article class="video-info" id="videoInfo"></article>
+      <section class="related-videos" id="relatedVideos" aria-label="Videos relacionados"></section>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu()"></div>
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú de géneros">
     <h4><center>GÉNEROS</center></h4>
     <div id="genreList" class="genre-tags"></div>
   </aside>
 
-  <footer><p>&copy; 2025 Biblioteca Digital</p></footer>
+  <footer>
+    <p>&copy; 2025 Audiolibros - Resúmenes en Video de Obras Literarias. Todos los derechos reservados.</p>
+    <p>Descubre y aprende con nuestra colección de audiolibros y resúmenes literarios en video.</p>
+  </footer>
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Audiolibros - Resúmenes en Video",
+    "url": "https://resumenes-literarios.netlify.app",
+    "description": "Colección de resúmenes en video de obras literarias y audiolibros organizados por género",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://elygar.github.io/RESUMENES-LITERARIOS/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 
   <script>
     let videos = [];
-    let currentGenre = "all";
+    let currentPage = 1;
+    const itemsPerPage = 30;
 
-    fetch("videos.json?t=" + new Date().getTime())
-      .then(r => r.json())
+    fetch('videos.json?t=' + new Date().getTime())
+      .then(response => response.json())
       .then(data => {
         videos = data;
-        mostrarVideos(videos);
+        mostrarPagina(1);
         cargarGeneros();
+      })
+      .catch(error => console.error('Error cargando JSON:', error));
+
+    function mostrarPagina(page) {
+      currentPage = page;
+      const lista = document.getElementById("videoList");
+      lista.innerHTML = "";
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginaVideos = videos.slice(start, end);
+
+      paginaVideos.forEach(video => {
+        const card = `
+          <article class="card" itemscope itemtype="https://schema.org/VideoObject">
+            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="Resumen de ${video.titulo} por ${video.autor}" itemprop="thumbnailUrl">
+            <div class="card-content">
+              <h3 itemprop="name">${video.titulo}</h3>
+              <p><strong>Autor:</strong> <span itemprop="author">${video.autor}</span></p>
+              <p itemprop="description">${video.sinopsis}</p>
+              <meta itemprop="uploadDate" content="${new Date().toISOString()}" />
+              <button class="btn" onclick="openOverlay('${video.id}')" aria-label="Ver resumen de ${video.titulo}">Ver más</button>
+            </div>
+          </article>`;
+        lista.innerHTML += card;
       });
+
+      generarPaginacion();
+    }
+
+    function generarPaginacion() {
+      const totalPages = Math.ceil(videos.length / itemsPerPage);
+      const pagContainer = document.getElementById("pagination");
+      pagContainer.innerHTML = "";
+
+      if (totalPages <= 1) return;
+
+      // Botón "Inicio"
+      if (currentPage > 1) {
+        const btnInicio = document.createElement("button");
+        btnInicio.textContent = "Inicio";
+        btnInicio.onclick = () => mostrarPagina(1);
+        pagContainer.appendChild(btnInicio);
+      }
+
+      // Botón "Anterior"
+      if (currentPage > 1) {
+        const btnPrev = document.createElement("button");
+        btnPrev.textContent = "« Anterior";
+        btnPrev.onclick = () => mostrarPagina(currentPage - 1);
+        pagContainer.appendChild(btnPrev);
+      }
+
+      // Lógica de páginas visibles
+      if (totalPages <= 5) {
+        // Si hay 5 o menos páginas, mostrar todas
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i;
+          btn.onclick = () => mostrarPagina(i);
+          if (i === currentPage) btn.classList.add("active");
+          pagContainer.appendChild(btn);
+        }
+      } else {
+        // Si hay más de 5 páginas, mostrar solo algunas
+        let startPage, endPage;
+
+        if (currentPage <= 3) {
+          // Al inicio
+          startPage = 1;
+          endPage = 5;
+        } else if (currentPage >= totalPages - 2) {
+          // Al final
+          startPage = totalPages - 4;
+          endPage = totalPages;
+        } else {
+          // En el medio
+          startPage = currentPage - 2;
+          endPage = currentPage + 2;
+        }
+
+        // Primera página
+        if (startPage > 1) {
+          const btn = document.createElement("button");
+          btn.textContent = "1";
+          btn.onclick = () => mostrarPagina(1);
+          pagContainer.appendChild(btn);
+
+          if (startPage > 2) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            dots.style.padding = "6px 8px";
+            pagContainer.appendChild(dots);
+          }
+        }
+
+        // Páginas del rango
+        for (let i = startPage; i <= endPage; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i;
+          btn.onclick = () => mostrarPagina(i);
+          if (i === currentPage) btn.classList.add("active");
+          pagContainer.appendChild(btn);
+        }
+
+        // Última página
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            dots.style.padding = "6px 8px";
+            pagContainer.appendChild(dots);
+          }
+
+          const btn = document.createElement("button");
+          btn.textContent = totalPages;
+          btn.onclick = () => mostrarPagina(totalPages);
+          pagContainer.appendChild(btn);
+        }
+      }
+
+      // Botón "Siguiente"
+      if (currentPage < totalPages) {
+        const btnNext = document.createElement("button");
+        btnNext.textContent = "Siguiente »";
+        btnNext.onclick = () => mostrarPagina(currentPage + 1);
+        pagContainer.appendChild(btnNext);
+      }
+
+      // Botón "Final"
+      if (currentPage < totalPages) {
+        const btnFinal = document.createElement("button");
+        btnFinal.textContent = "Final";
+        btnFinal.onclick = () => mostrarPagina(totalPages);
+        pagContainer.appendChild(btnFinal);
+      }
+    }
+
+    function openOverlay(videoId) {
+      const videoActual = videos.find(v => v.id === videoId);
+      document.getElementById("videoOverlay").style.display = "flex";
+      document.getElementById("player").innerHTML = `
+        <iframe width="100%" height="500"
+          src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+          frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>`;
+      
+      mostrarInfoVideo(videoActual);
+      mostrarVideosRelacionados(videoActual);
+    }
+
+    function mostrarInfoVideo(video) {
+      const container = document.getElementById("videoInfo");
+      const generos = video.genero.split(",").map(g => g.trim());
+      
+      let tagsHTML = '';
+      generos.forEach(genero => {
+        tagsHTML += `<span class="video-tag">${genero}</span>`;
+      });
+      
+      container.innerHTML = `
+        <h2>${video.titulo}</h2>
+        <p class="author"><strong>Autor:</strong> ${video.autor}</p>
+        <p class="synopsis">${video.sinopsis}</p>
+        <div class="video-tags">${tagsHTML}</div>
+      `;
+    }
+
+    function mostrarVideosRelacionados(videoActual) {
+      const container = document.getElementById("relatedVideos");
+      
+      let relacionados = videos.filter(v => {
+        if (v.id === videoActual.id) return false;
+        const generosActual = videoActual.genero.toLowerCase().split(",").map(g => g.trim());
+        const generosVideo = v.genero.toLowerCase().split(",").map(g => g.trim());
+        return generosActual.some(g => generosVideo.includes(g));
+      });
+
+      if (relacionados.length < 4) {
+        const otros = videos.filter(v => v.id !== videoActual.id && !relacionados.includes(v));
+        relacionados = [...relacionados, ...otros];
+      }
+
+      relacionados = relacionados.sort(() => Math.random() - 0.5).slice(0, 4);
+
+      let html = '<h3>Videos Relacionados</h3><div class="related-grid">';
+      relacionados.forEach(video => {
+        html += `
+          <div class="related-card" onclick="openOverlay('${video.id}')">
+            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.titulo}">
+            <div class="related-card-content">
+              <h4>${video.titulo}</h4>
+              <p>${video.autor}</p>
+            </div>
+          </div>`;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function closeOverlay() {
+      document.getElementById("videoOverlay").style.display = "none";
+      document.getElementById("player").innerHTML = "";
+    }
+
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+      const filter = this.value.toLowerCase();
+      const filtrados = videos.filter(video =>
+        video.titulo.toLowerCase().includes(filter) ||
+        video.autor.toLowerCase().includes(filter) ||
+        video.sinopsis.toLowerCase().includes(filter)
+      );
+      mostrarResultados(filtrados);
+    });
+
+    function mostrarResultados(listaVideos) {
+      const lista = document.getElementById("videoList");
+      lista.innerHTML = "";
+      listaVideos.forEach(video => {
+        const card = `
+          <article class="card" itemscope itemtype="https://schema.org/VideoObject">
+            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="Resumen de ${video.titulo} por ${video.autor}" itemprop="thumbnailUrl">
+            <div class="card-content">
+              <h3 itemprop="name">${video.titulo}</h3>
+              <p><strong>Autor:</strong> <span itemprop="author">${video.autor}</span></p>
+              <p itemprop="description">${video.sinopsis}</p>
+              <meta itemprop="uploadDate" content="${new Date().toISOString()}" />
+              <button class="btn" onclick="openOverlay('${video.id}')" aria-label="Ver resumen de ${video.titulo}">Ver más</button>
+            </div>
+          </article>`;
+        lista.innerHTML += card;
+      });
+      document.getElementById("pagination").innerHTML = "";
+    }
 
     function toggleMenu() {
-      document.getElementById('sidebar').classList.toggle('active');
-    }
-
-    async function mostrarVideos(lista) {
-      const cont = document.getElementById("videoList");
-      const noRes = document.getElementById("noResults");
-      cont.innerHTML = "";
-      if (lista.length === 0) {
-        noRes.style.display = "block";
-        return;
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const menuBtn = document.getElementById('menuBtn');
+      sidebar.classList.toggle('active');
+      if (sidebar.classList.contains('active')) {
+        overlay.style.display = 'block';
+        menuBtn.classList.add('hidden');
+      } else {
+        overlay.style.display = 'none';
+        menuBtn.classList.remove('hidden');
       }
-      noRes.style.display = "none";
-      const fragment = document.createDocumentFragment();
-      lista.forEach(v => {
-        const art = document.createElement("article");
-        art.className = "card";
-        art.innerHTML = `
-          <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.titulo}">
-          <div class="card-content">
-            <h3>${v.titulo}</h3>
-            <p><strong>Autor:</strong> ${v.autor}</p>
-            <p>${v.sinopsis}</p>
-            <button class="btn" onclick="openVideo('${v.id}')">Ver más</button>
-          </div>`;
-        fragment.appendChild(art);
-      });
-      cont.appendChild(fragment);
-    }
-
-    function openVideo(id) {
-      window.open(`https://www.youtube.com/watch?v=${id}`, "_blank");
     }
 
     function cargarGeneros() {
-      const lista = document.getElementById("genreList");
-      lista.innerHTML = "";
+      const contenedor = document.getElementById("genreList");
+      contenedor.innerHTML = "";
+
       const tagTodos = document.createElement("div");
       tagTodos.textContent = "TODOS";
-      tagTodos.className = "genre-tag active";
+      tagTodos.className = "genre-tag";
       tagTodos.onclick = () => filterGenre("all", tagTodos);
-      lista.appendChild(tagTodos);
+      contenedor.appendChild(tagTodos);
 
-      const generos = new Set();
-      videos.forEach(v => v.genero.split(",").forEach(g => generos.add(g.trim().toUpperCase())));
+      let generos = new Set();
+      videos.forEach(video => {
+        video.genero.split(",").forEach(g => generos.add(g.trim().toUpperCase()));
+      });
+
       [...generos].sort().forEach(g => {
         const tag = document.createElement("div");
         tag.textContent = g;
         tag.className = "genre-tag";
         tag.onclick = () => filterGenre(g.toLowerCase(), tag);
-        lista.appendChild(tag);
+        contenedor.appendChild(tag);
       });
     }
 
     function filterGenre(genre, el) {
-      document.querySelectorAll(".genre-tag").forEach(t => t.classList.remove("active"));
-      el.classList.add("active");
-      currentGenre = genre;
+      document.querySelectorAll(".genre-tag").forEach(tag => tag.classList.remove("active"));
+      if (el) el.classList.add("active");
 
-      if (genre === "all") {
-        mostrarVideos(videos);
-      } else {
-        const filtrados = videos.filter(v => v.genero.toLowerCase().includes(genre));
-        mostrarVideos(filtrados);
-      }
+      const filtrados = (genre === "all")
+        ? videos
+        : videos.filter(video => video.genero.toLowerCase().includes(genre));
+      mostrarResultados(filtrados);
       toggleMenu();
     }
-
-    document.getElementById("searchInput").addEventListener("input", e => {
-      const texto = e.target.value.toLowerCase().trim();
-      if (texto === "") {
-        if (currentGenre === "all") mostrarVideos(videos);
-        else filterGenre(currentGenre, document.querySelector(`.genre-tag.active`));
-        return;
-      }
-
-      // 🔍 búsqueda tipo “tag” inteligente
-      const filtrados = videos.filter(v =>
-        v.titulo.toLowerCase().includes(texto) ||
-        v.autor.toLowerCase().includes(texto) ||
-        v.sinopsis.toLowerCase().includes(texto) ||
-        v.genero.toLowerCase().includes(texto)
-      );
-      mostrarVideos(filtrados);
-    });
   </script>
 </body>
 </html>
+
+
