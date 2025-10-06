@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://elygar.github.io/RESUMENES-LITERARIOS/sitemap.xml
+
+# Bloquear solo archivos de datos técnicos
+Disallow: /videos.json
+Disallow: /*.json$
