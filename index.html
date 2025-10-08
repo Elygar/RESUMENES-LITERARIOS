@@ -525,16 +525,39 @@
     }, duracion / pasos);
   }
 
+  // Verificar si ya vio la pantalla de bienvenida
+  function yaVioLaPantalla() {
+    return localStorage.getItem('pantallaVista') === 'true';
+  }
+
+  // Marcar que ya vio la pantalla
+  function marcarPantallaVista() {
+    localStorage.setItem('pantallaVista', 'true');
+  }
+
   // Inicializar contador de visitas
   window.addEventListener('DOMContentLoaded', async () => {
-    await registrarVisita();
-    escucharEstadisticas();
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    
+    // Si ya vio la pantalla antes, ocultarla inmediatamente y registrar visita
+    if (yaVioLaPantalla()) {
+      welcomeScreen.style.display = 'none';
+      await registrarVisita();
+    } else {
+      // Primera vez, mostrar la pantalla y cargar estadísticas
+      await registrarVisita();
+      escucharEstadisticas();
+    }
   });
 
   // Función para entrar al sitio
   window.entrarAlSitio = function() {
     const welcomeScreen = document.getElementById('welcomeScreen');
     welcomeScreen.classList.add('hidden');
+    
+    // Marcar que ya vio la pantalla (para que no se muestre más)
+    marcarPantallaVista();
+    
     setTimeout(() => {
       welcomeScreen.style.display = 'none';
     }, 500);
