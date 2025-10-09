@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   
   <!-- SEO Básico -->
   <title>Resúmenes Literarios en Video - Audiolibros y Análisis de Libros Gratis</title>
@@ -147,16 +148,48 @@
     .report-btn{width:100%;padding:12px;background:#ff4444;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:16px;transition:background .3s;display:flex;align-items:center;justify-content:center;gap:8px}
     .report-btn:hover{background:#cc0000}
     
-    .sidebar{position:fixed;left:-300px;top:0;height:100%;width:260px;background:var(--dark);color:#fff;padding:18px;transition:left .25s;z-index:2100;overflow:auto}
+    .sidebar{position:fixed;left:-300px;top:0;height:100%;width:260px;background:var(--dark);color:#fff;padding:18px 0;transition:left .25s;z-index:2100;overflow:auto}
     .sidebar.active{left:0}
-    .sidebar h3{text-align:center;margin:0 0 12px;font-size:1.2rem}
+    .sidebar-header{text-align:center;margin:0 0 20px;padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .sidebar-header img{width:50px;height:50px;object-fit:contain}
     .genre-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-    .genre-tag{border:1px solid rgba(255,255,255,.2);padding:8px 10px;border-radius:12px;cursor:pointer;font-size:.85rem;text-transform:uppercase;background:transparent;color:#fff}
-    .genre-tag.active{background:#fff;color:var(--dark);border-color:#fff}
+    .genre-tag{border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.9rem;text-transform:capitalize;color:#fff;font-weight:500;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+    .genre-tag:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.25);opacity:.9}
+    .genre-tag.active{transform:scale(1.02);box-shadow:0 3px 8px rgba(0,0,0,.3);border:2px solid #fff}
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2050}
     .sidebar-overlay.show{display:block}
     
-    .contact-btn{width:100%;padding:12px;background:#ff6b35;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:bold;cursor:pointer;margin-top:20px;transition:background .3s}
+    /* Submenús */
+    .submenu-section{margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:12px;width:100%;margin:0;padding-left:0;padding-right:0}
+    .submenu-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#5e35b1;border-radius:0;cursor:pointer;transition:background .3s;width:100%;margin:0}
+    .submenu-header:hover{background:#7e52d1}
+    
+    /* Color diferente para cada submenú */
+    .submenu-section:nth-child(1) .submenu-header{background:#ff6b35}
+    .submenu-section:nth-child(1) .submenu-header:hover{background:#ff8555}
+    .submenu-section:nth-child(3) .submenu-header{background:#5e35b1}
+    .submenu-section:nth-child(3) .submenu-header:hover{background:#5e35b1}
+    .submenu-header span:first-child{font-weight:600;font-size:.95rem}
+    .arrow{transition:transform .3s;font-size:.8rem}
+    .arrow.rotate{transform:rotate(180deg)}
+    .submenu-content{max-height:0;overflow:hidden;transition:max-height .5s ease;width:100%}
+    .submenu-content.open{max-height:none;overflow:visible}
+    .submenu-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px;margin-top:12px;padding:0 18px;width:100%;box-sizing:border-box}
+    .submenu-items .genre-tag{font-size:.8rem;padding:6px 8px;white-space:normal;word-wrap:break-word;text-align:center;min-height:32px;display:flex;align-items:center;justify-content:center;line-height:1.2}
+    
+    /* Lista de Autores (estilo vertical como redes) */
+    .autores-list{display:flex;flex-direction:column;gap:0;padding:12px 0;width:100%}
+    .autor-item{display:flex;align-items:center;padding:10px 18px;background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:background .3s;width:100%;box-sizing:border-box;border-bottom:1px solid rgba(255,255,255,.05)}
+    .autor-item:hover{background:rgba(255,255,255,.15)}
+    .autor-item.active{background:rgba(255,255,255,.2);font-weight:600}
+    
+    /* Redes Sociales */
+    .social-links{display:flex;flex-direction:column;gap:0;padding:12px 0;width:100%}
+    .social-link{display:flex;align-items:center;gap:12px;padding:10px 18px;background:rgba(255,255,255,.1);border-radius:0;color:#fff;text-decoration:none;transition:background .3s;width:100%;box-sizing:border-box}
+    .social-link:hover{background:rgba(255,255,255,.2)}
+    .social-link i{font-size:1.3rem;width:24px;text-align:center}
+    
+    .contact-btn{width:100%;padding:12px 18px;background:#ff6b35;color:#fff;border:none;border-radius:0;font-size:1rem;font-weight:bold;cursor:pointer;margin-top:20px;transition:background .3s;box-sizing:border-box}
     .contact-btn:hover{background:#ff8555}
     
     .contact-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:3000;align-items:center;justify-content:center;padding:20px}
@@ -246,8 +279,59 @@
   </header>
 
   <div class="sidebar" id="sidebar" aria-hidden="true">
-    <h3>GÉNEROS</h3>
-    <div id="genreList" class="genre-tags" aria-label="Lista de géneros"></div>
+    <div class="sidebar-header">
+      <img src="favicon.png" alt="Menú">
+    </div>
+    
+    <!-- Submenú: Escritores -->
+    <div class="submenu-section">
+      <div class="submenu-header" onclick="toggleSubmenu('escritores')">
+        <span>✍️ ESCRITORES</span>
+        <span class="arrow" id="arrow-escritores">▼</span>
+      </div>
+      <div class="submenu-content" id="submenu-escritores">
+        <div id="autoresList" class="autores-list"></div>
+      </div>
+    </div>
+    
+    <!-- Submenú: Géneros -->
+    <div class="submenu-section">
+      <div class="submenu-header" onclick="toggleSubmenu('generos')">
+        <span>📚 GÉNEROS</span>
+        <span class="arrow" id="arrow-generos">▼</span>
+      </div>
+      <div class="submenu-content" id="submenu-generos">
+        <div id="genreList" class="submenu-items" aria-label="Lista de géneros"></div>
+      </div>
+    </div>
+    
+    <!-- Submenú: Nuestras Redes -->
+    <div class="submenu-section">
+      <div class="submenu-header" onclick="toggleSubmenu('redes')">
+        <span>🌐 NUESTRAS REDES</span>
+        <span class="arrow" id="arrow-redes">▼</span>
+      </div>
+      <div class="submenu-content" id="submenu-redes">
+        <div class="social-links">
+          <a href="https://facebook.com/TU_PAGINA" target="_blank" class="social-link">
+            <i class="fab fa-facebook"></i> Facebook
+          </a>
+          <a href="https://twitter.com/TU_USUARIO" target="_blank" class="social-link">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a href="https://youtube.com/@TU_CANAL" target="_blank" class="social-link">
+            <i class="fab fa-youtube"></i> YouTube
+          </a>
+          <a href="https://t.me/TU_CANAL" target="_blank" class="social-link">
+            <i class="fab fa-telegram"></i> Telegram
+          </a>
+          <a href="https://instagram.com/TU_USUARIO" target="_blank" class="social-link">
+            <i class="fab fa-instagram"></i> Instagram
+          </a>
+        </div>
+      </div>
+    </div>
+    
     <button class="contact-btn" onclick="openContactForm()">✉️ ESCRÍBENOS</button>
   </div>
   <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
@@ -436,6 +520,7 @@ fetch('videos.json?t=' + Date.now())
     videos = Array.isArray(data) ? data : [];
     listaActual = videos.slice();
     cargarGeneros();
+    cargarAutores();
     mostrarPagina(1);
   })
   .catch(err => {
@@ -541,6 +626,33 @@ function buscar(){
   mostrarPagina(1);
 }
 
+// Colores vibrantes para los géneros
+const coloresGeneros = [
+  '#000000', // Negro
+  '#0066FF', // Azul
+  '#8B4513', // Marrón
+  '#808080', // Gris
+  '#008000', // Verde
+  '#FFA500', // Naranja
+  '#FF0000', // Rojo
+  '#800080', // Violeta
+  '#FFFF00', // Amarillo
+  '#C0C0C0', // Plateado
+  '#FF69B4', // Rosa
+  '#4169E1', // Azul real
+  '#FF4500', // Naranja rojizo
+  '#32CD32', // Verde lima
+  '#FF1493'  // Rosa profundo
+];
+
+function obtenerColorGenero(texto) {
+  let hash = 0;
+  for (let i = 0; i < texto.length; i++) {
+    hash = texto.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return coloresGeneros[Math.abs(hash) % coloresGeneros.length];
+}
+
 function cargarGeneros(){
   const cont = document.getElementById('genreList');
   cont.innerHTML = '';
@@ -556,7 +668,9 @@ function cargarGeneros(){
 
   const todos = document.createElement('div');
   todos.className = 'genre-tag active';
-  todos.textContent = 'TODOS';
+  todos.textContent = 'Todos';
+  todos.style.background = '#ffffff';
+  todos.style.color = '#000';
   todos.onclick = () => {
     document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active'));
     todos.classList.add('active');
@@ -566,15 +680,41 @@ function cargarGeneros(){
   };
   cont.appendChild(todos);
 
-  [...setG].sort((a,b)=>a.localeCompare(b,'es')).forEach(g => {
+  [...setG].forEach(g => {
     const el = document.createElement('div');
     el.className = 'genre-tag';
     el.textContent = g;
+    el.style.background = obtenerColorGenero(g);
     el.onclick = () => {
       document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active'));
       el.classList.add('active');
       const key = g.toLowerCase();
       listaActual = videos.filter(v => v.genero && v.genero.toLowerCase().includes(key));
+      mostrarPagina(1);
+      if (window.innerWidth <= 768) toggleMenu();
+    };
+    cont.appendChild(el);
+  });
+}
+
+// Función para cargar autores
+function cargarAutores(){
+  const cont = document.getElementById('autoresList');
+  cont.innerHTML = '';
+
+  const setAutores = new Set();
+  videos.forEach(v => {
+    if (v.autor) setAutores.add(v.autor.trim());
+  });
+
+  [...setAutores].sort((a,b)=>a.localeCompare(b,'es')).forEach(autor => {
+    const el = document.createElement('div');
+    el.className = 'autor-item';
+    el.textContent = autor;
+    el.onclick = () => {
+      document.querySelectorAll('.autor-item').forEach(t=>t.classList.remove('active'));
+      el.classList.add('active');
+      listaActual = videos.filter(v => v.autor && v.autor.trim() === autor);
       mostrarPagina(1);
       if (window.innerWidth <= 768) toggleMenu();
     };
@@ -791,8 +931,43 @@ function toggleMenu(){
   const overlay = document.getElementById('sidebarOverlay');
   const isActive = sidebar.classList.toggle('active');
   overlay.classList.toggle('show', isActive);
+  
+  // Si se cierra el menú, cerrar todos los submenús
+  if(!isActive) {
+    document.querySelectorAll('.submenu-content').forEach(sub => {
+      sub.classList.remove('open');
+    });
+    document.querySelectorAll('.arrow').forEach(arr => {
+      arr.classList.remove('rotate');
+    });
+  }
+  
   if(isActive) document.body.style.overflow = 'hidden';
   else document.body.style.overflow = '';
+}
+
+// Función para toggle de submenús
+function toggleSubmenu(submenuId){
+  const content = document.getElementById(`submenu-${submenuId}`);
+  const arrow = document.getElementById(`arrow-${submenuId}`);
+  
+  // Cerrar todos los demás submenús
+  document.querySelectorAll('.submenu-content').forEach(sub => {
+    if (sub.id !== `submenu-${submenuId}`) {
+      sub.classList.remove('open');
+    }
+  });
+  
+  // Resetear todas las flechas
+  document.querySelectorAll('.arrow').forEach(arr => {
+    if (arr.id !== `arrow-${submenuId}`) {
+      arr.classList.remove('rotate');
+    }
+  });
+  
+  // Toggle del submenú actual
+  const isOpen = content.classList.toggle('open');
+  arrow.classList.toggle('rotate', isOpen);
 }
 
 function openContactForm(){
