@@ -150,7 +150,8 @@
     
     .sidebar{position:fixed;left:-300px;top:0;height:100%;width:260px;background:var(--dark);color:#fff;padding:18px 0;transition:left .25s;z-index:2100;overflow:auto}
     .sidebar.active{left:0}
-    .sidebar-header{text-align:center;margin:0 0 20px;padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .sidebar-header{text-align:center;margin:0 0 10px;padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .visitor-message{padding:8px 18px;text-align:center;font-size:.9rem;font-weight:bold;color:#ffd700;background:rgba(0,0,0,.2);margin-bottom:15px}
     .sidebar-header img{width:50px;height:50px;object-fit:contain}
     .genre-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
     .genre-tag{border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.9rem;text-transform:capitalize;color:#fff;font-weight:500;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
@@ -282,6 +283,7 @@
     <div class="sidebar-header">
       <img src="favicon.png" alt="Menú">
     </div>
+    <div id="visitorMessage" class="visitor-message"></div>
     
     <!-- Submenú: Escritores -->
     <div class="submenu-section">
@@ -506,6 +508,53 @@
   };
 
   document.getElementById('contactForm').addEventListener('submit', window.enviarFormulario);
+
+  // --- LÓGICA DEL CONTADOR DE VISITANTES ---
+  async function gestionarVisitante() {
+    const visitorIdKey = 'visitorNumber';
+    const visitorMessageEl = document.getElementById('visitorMessage');
+    let visitorNumber = localStorage.getItem(visitorIdKey);
+
+    if (visitorNumber) {
+      // Es un visitante que regresa
+      visitorMessageEl.textContent = `👋 ¡Bienvenido de nuevo, Visitante #${visitorNumber}!`;
+    } else {
+      // Es un nuevo visitante
+      const counterRef = doc(db, 'estadisticas', 'contador_visitantes');
+      visitorMessageEl.textContent = 'Registrando visitante...';
+
+      try {
+        const docSnap = await getDoc(counterRef);
+        let newVisitorNumber;
+
+        if (docSnap.exists()) {
+          const currentTotal = docSnap.data().total || 0;
+          newVisitorNumber = currentTotal + 1;
+
+          // Actualizar el contador en Firestore
+          await updateDoc(counterRef, { total: newVisitorNumber });
+
+          // Guardar el número en el navegador del usuario
+          localStorage.setItem(visitorIdKey, newVisitorNumber);
+          visitorNumber = newVisitorNumber;
+          visitorMessageEl.textContent = `🎉 ¡Bienvenido, Visitante #${visitorNumber}!`;
+        } else {
+          // El documento no existe, lo creamos (poco probable si seguiste el paso 1)
+          newVisitorNumber = 1;
+          await setDoc(counterRef, { total: newVisitorNumber });
+          localStorage.setItem(visitorIdKey, newVisitorNumber);
+          visitorMessageEl.textContent = `🎉 ¡Bienvenido, Visitante #${newVisitorNumber}!`;
+        }
+      } catch (error) {
+        console.error("Error al registrar visitante:", error);
+        visitorMessageEl.textContent = 'No se pudo registrar al visitante.';
+      }
+    }
+  }
+
+  // Ejecutar la función cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', gestionarVisitante);
+
 </script>
 
 <script>
